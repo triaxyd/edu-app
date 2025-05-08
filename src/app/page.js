@@ -1,16 +1,17 @@
 'use client';
 import { useState } from 'react';
-import { useAuth } from '../../context/authContext';
+import { useAuth } from '../context/authContext';
+
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = login(username, password);
+    const success = await login(email, password);
     if (!success) {
       setError('Invalid credentials. Try again.');
     }
@@ -35,17 +36,17 @@ export default function LoginPage() {
           )}
           <div className="-space-y-px rounded-md shadow-sm">
             <div className="mb-4">
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                Username
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
               </label>
               <input
-                id="username"
-                name="username"
-                type="text"
-                autoComplete="username"
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="block w-full rounded-md border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               />
             </div>

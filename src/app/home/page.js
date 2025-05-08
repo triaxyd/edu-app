@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useAuth } from '../../../context/authContext';
+import { useAuth } from '../../context/authContext';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -23,15 +23,15 @@ const modules = [
 ];
 
 export default function HomePage() {
-  const { isLoggedIn, logout } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   // Redirect to login if not logged in
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!user) {
       router.push('/');
     }
-  }, [isLoggedIn]);
+  }, [user]);
 
   return (
     <div className="p-4">
