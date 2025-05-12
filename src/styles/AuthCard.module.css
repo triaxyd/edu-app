@@ -1,0 +1,45 @@
+.authCard {
+    display: flex;
+    width: min(90vw, 1200px);
+    background-color: #F2F2F2;
+    border-radius: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 60px;
+    gap:30px;
+}
+
+/* Left half: illustration */
+.illustration {
+    flex: 1;
+    min-width: 0; /* ensure flex shrink */
+}
+
+.image {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding-top:25%;
+    padding-left: 5%;
+}
+
+/* Right half: form content */
+.content {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header slot (logo + welcome) */
+.header {
+    margin-bottom: 24px;
+}
+
+/* Form slot */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+}
