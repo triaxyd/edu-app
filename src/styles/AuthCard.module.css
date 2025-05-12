@@ -38,7 +38,7 @@
 }
 
 /* Form slot */
-.form {
+.form form{
     display: flex;
     flex-direction: column;
     gap: 16px;
