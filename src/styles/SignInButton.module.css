@@ -1,0 +1,14 @@
+.button {
+    height: 40px;
+    width: 100%;
+    border: 1.5px solid #110F36;
+    border-radius: 10px;
+    background: #FFBE1A;
+    font-family: 'Source Serif Pro', serif;
+    font-size: 1rem;
+    color: #110F36;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,0 +1,16 @@
+.text {
+    font-family: 'Source Serif Pro', serif;
+    color: #110F36;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.link {
+    color: #4F48ED;
+    margin-left: 4px;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
