@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
 } from 'firebase/auth';
 
 const AuthContext = createContext();
@@ -35,13 +36,24 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const register = async (email, password) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push('/home');
+      return true;
+    } catch (error) {
+      console.error('Registration error:', error.message);
+      return false;
+    }
+  };
+
   const logout = async () => {
     await signOut(auth);
     router.push('/');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );
