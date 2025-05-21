@@ -1,0 +1,31 @@
+/* src/styles/Home.module.css */
+
+.page {
+    background-color: #7F93B3;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px; /* in case someone’s on a smaller screen */
+}
+
+.card {
+    width: 1680px;
+    height: 1024px;
+    display: flex;
+    background-color: #F2F2F2;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.sidebar {
+    width: 128px;
+    background-color: #110F36;
+}
+
+.content {
+    flex: 1;
+    padding: 32px;
+    /* you can add your grid/list styling here later */
+}
