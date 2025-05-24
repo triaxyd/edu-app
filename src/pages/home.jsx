@@ -41,31 +41,28 @@ export default function HomePage() {
 
     return (
         <div className={styles.page}>
-            <div className={styles.cardContainer}>
-                <div className={styles.sidebar}></div>
+            <div className={styles.sidebar}></div>
+            <div className={styles.content}>
+                <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
+                <div className={styles.divider}></div>
 
-                <div className={styles.content}>
-                    <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
-                    <div className={styles.divider}></div>
+                <h2 className={styles.sectionTitle}>My Courses</h2>
 
-                    <h2 className={styles.sectionTitle}>My Courses</h2>
-
-                    <div className={styles.courseList}>
-                        {modules.map((mod, index) => (
-                            <div key={mod.id} className={styles.courseCard}>
-                                <img
-                                    src={mod.image}
-                                    alt={mod.title}
-                                    className={styles.courseImage}
-                                />
-                                <div className={styles.courseInfo}>
-                                    <div className={styles.courseTitle}>{mod.title}</div>
-                                    <div className={styles.courseSubtitle}>{mod.subtitle}</div>
-                                </div>
-                                <div className={styles.courseProgress}>{mod.progress}</div>
+                <div className={styles.courseList}>
+                    {modules.map((mod, index) => (
+                        <div key={mod.id} className={styles.courseCard}>
+                            <img
+                                src={mod.image}
+                                alt={mod.title}
+                                className={styles.courseImage}
+                            />
+                            <div className={styles.courseInfo}>
+                                <div className={styles.courseTitle}>{mod.title}</div>
+                                <div className={styles.courseSubtitle}>{mod.subtitle}</div>
                             </div>
-                        ))}
-                    </div>
+                            <div className={styles.courseProgress}>{mod.progress}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

@@ -1,12 +1,10 @@
 /* src/styles/Home.module.css */
 
 .page {
-    background-color: #7F93B3;
+    background-color: #F2F2F2;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 24px; /* in case someone’s on a smaller screen */
+    overflow: hidden;
 }
 
 .cardContainer {
@@ -22,15 +20,17 @@
 .sidebar {
     width: 150px;
     background-color: #110F36;
+    flex-shrink: 0;
 }
 
 .content {
     flex: 1;
-    padding-top: 15px;
+    padding-top: 40px;
     padding-left: 60px;
     padding-right: 60px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 }
 
 .title {
@@ -38,6 +38,7 @@
     font-size: 48px;
     color: #110F36;
     margin-bottom: 12px;
+    font-weight: 550;
 }
 .divider {
     width: 100%;
@@ -46,10 +47,10 @@
     margin: 0 auto;
 }
 .sectionTitle {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     font-size: 48px;
-    color: #110F36;
+    color: #6465AE;
     margin-top: 50px;
     margin-bottom: 30px;
 }
@@ -109,7 +110,7 @@
 .courseProgress {
     font-family: 'Inter', sans-serif;
     font-size: 40px;
-    color: #110F36;
+    color: #6465AE;
     margin: 20px;
 }
 @keyframes fadeInUp {
