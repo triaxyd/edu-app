@@ -1,0 +1,41 @@
+.sidebar {
+    width: 150px;
+    background-color: #110F36;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.iconWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    flex: 1;
+    justify-content: center;
+}
+
+.icon {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+.logoWrapper {
+    margin-top: 40px; /* big gap between logo and icons */
+}
+
+.logo {
+    width: auto;
+    height: auto;
+    max-width: 90px;
+    max-height: 90px;
+    object-fit: contain;
+    display: block;
+}

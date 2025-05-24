@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
+import SideBar from '@/components/Sidebar/SideBar';
 import { useAuth } from '@/context/authContext';
 import styles from '@/styles/Home.module.css';
 
@@ -40,31 +40,29 @@ export default function HomePage() {
     }, [user]);
 
     return (
-        <div className={styles.page}>
-            <div className={styles.sidebar}></div>
-            <div className={styles.content}>
-                <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
-                <div className={styles.divider}></div>
+        <>
+            <SideBar />
+            <div className={styles.page}>
+                <div className={styles.content}>
+                    <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
+                    <div className={styles.divider}></div>
 
-                <h2 className={styles.sectionTitle}>My Courses</h2>
+                    <h2 className={styles.sectionTitle}>My Courses</h2>
 
-                <div className={styles.courseList}>
-                    {modules.map((mod, index) => (
-                        <div key={mod.id} className={styles.courseCard}>
-                            <img
-                                src={mod.image}
-                                alt={mod.title}
-                                className={styles.courseImage}
-                            />
-                            <div className={styles.courseInfo}>
-                                <div className={styles.courseTitle}>{mod.title}</div>
-                                <div className={styles.courseSubtitle}>{mod.subtitle}</div>
+                    <div className={styles.courseList}>
+                        {modules.map((mod) => (
+                            <div key={mod.id} className={styles.courseCard}>
+                                <img src={mod.image} alt={mod.title} className={styles.courseImage} />
+                                <div className={styles.courseInfo}>
+                                    <div className={styles.courseTitle}>{mod.title}</div>
+                                    <div className={styles.courseSubtitle}>{mod.subtitle}</div>
+                                </div>
+                                <div className={styles.courseProgress}>{mod.progress}</div>
                             </div>
-                            <div className={styles.courseProgress}>{mod.progress}</div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
