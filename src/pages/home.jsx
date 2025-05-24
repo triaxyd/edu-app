@@ -6,7 +6,30 @@ import Link from 'next/link';
 import { useAuth } from '@/context/authContext';
 import styles from '@/styles/Home.module.css';
 
-const modules = [ /* ...your modules array... */ ];
+const modules = [
+    {
+        id: 'intro',
+        title: 'Introduction to JavaScript',
+        subtitle: 'Learn what JavaScript is and why it is important.',
+        progress: '100%',
+        image: '/illustrations/course1.png',
+    },
+    {
+        id: 'basics',
+        title: 'Basic JavaScript Concepts',
+        subtitle: 'Learn variables, data types and functions.',
+        progress: '70%',
+        image: '/illustrations/course2.png',
+    },
+    {
+        id: 'advanced',
+        title: 'Advanced JavaScript Techniques',
+        subtitle: 'Explore async programming, objects, and the DOM.',
+        progress: '20%',
+        image: '/illustrations/course3.png',
+    },
+];
+
 
 export default function HomePage() {
     const { user, logout } = useAuth();
@@ -18,38 +41,28 @@ export default function HomePage() {
 
     return (
         <div className={styles.page}>
-            <div className={styles.card}>
-                {/* Left sidebar */}
-                <div className={styles.sidebar} />
+            <div className={styles.cardContainer}>
+                <div className={styles.sidebar}></div>
 
-                {/* Main content area */}
                 <div className={styles.content}>
-                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                        <h1>Hello, {user?.email}!</h1>
-                        <button onClick={logout}>Log Out</button>
-                    </div>
-                    <h2 style={{ marginTop: 24 }}>My Courses</h2>
+                    <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
+                    <div className={styles.divider}></div>
 
-                    <div style={{ marginTop: 16, display:'grid', gap:16 }}>
-                        {modules.map((mod) => (
-                            <div
-                                key={mod.id}
-                                style={{
-                                    padding: 16,
-                                    background: 'white',
-                                    borderRadius: 8,
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <div>
-                                    <strong>{mod.title}</strong>
-                                    <p style={{ margin: '4px 0 0', color: '#666' }}>
-                                        {mod.description}
-                                    </p>
+                    <h2 className={styles.sectionTitle}>My Courses</h2>
+
+                    <div className={styles.courseList}>
+                        {modules.map((mod, index) => (
+                            <div key={mod.id} className={styles.courseCard}>
+                                <img
+                                    src={mod.image}
+                                    alt={mod.title}
+                                    className={styles.courseImage}
+                                />
+                                <div className={styles.courseInfo}>
+                                    <div className={styles.courseTitle}>{mod.title}</div>
+                                    <div className={styles.courseSubtitle}>{mod.subtitle}</div>
                                 </div>
-                                <span>{mod.progress || '0%'}{/* or calculate */}</span>
+                                <div className={styles.courseProgress}>{mod.progress}</div>
                             </div>
                         ))}
                     </div>
