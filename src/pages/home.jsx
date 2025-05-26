@@ -84,7 +84,6 @@ export default function HomePage() {
                             <div className={styles.statLabel}>Average Progress</div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </>
