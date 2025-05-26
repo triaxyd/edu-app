@@ -22,10 +22,11 @@
 .icon {
     cursor: pointer;
     transition: transform 0.2s ease;
+    margin:20px;
 }
 
 .icon:hover {
-    transform: scale(1.1);
+    transform: scale(1.4);
 }
 .logoWrapper {
     margin-top: 40px; /* big gap between logo and icons */

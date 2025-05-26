@@ -44,7 +44,14 @@ export default function HomePage() {
             <SideBar />
             <div className={styles.page}>
                 <div className={styles.content}>
-                    <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
+                    <div className={styles.headerRow}>
+                        <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
+                        <img
+                            src="/icons/settings.png"
+                            alt="Settings"
+                            className={styles.settingsIcon}
+                        />
+                    </div>
                     <div className={styles.divider}></div>
 
                     <h2 className={styles.sectionTitle}>My Courses</h2>
@@ -61,6 +68,23 @@ export default function HomePage() {
                             </div>
                         ))}
                     </div>
+                    <div className={styles.tipBox}>
+                        <h3 className={styles.tipLabel}>Tip of the Day</h3>
+                        <p className={styles.tipText}>
+                            You can declare a variable with <code>let</code> and <code>const</code> — but <code>const</code> can’t be reassigned!
+                        </p>
+                    </div>
+                    <div className={styles.progressOverview}>
+                        <div className={styles.statBlock}>
+                            <div className={styles.statNumber}>3</div>
+                            <div className={styles.statLabel}>Modules</div>
+                        </div>
+                        <div className={styles.statBlock}>
+                            <div className={styles.statNumber}>63%</div>
+                            <div className={styles.statLabel}>Average Progress</div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </>
