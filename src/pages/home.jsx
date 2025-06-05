@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import SideBar from '@/components/Sidebar/SideBar';
 import { useAuth } from '@/context/authContext';
 import styles from '@/styles/Home.module.css';
+import Link from 'next/link';
 
 const modules = [
     {
@@ -58,14 +59,16 @@ export default function HomePage() {
 
                     <div className={styles.courseList}>
                         {modules.map((mod) => (
-                            <div key={mod.id} className={styles.courseCard}>
-                                <img src={mod.image} alt={mod.title} className={styles.courseImage} />
-                                <div className={styles.courseInfo}>
-                                    <div className={styles.courseTitle}>{mod.title}</div>
-                                    <div className={styles.courseSubtitle}>{mod.subtitle}</div>
+                            <Link key={mod.id} href={`/course/${mod.id}`} style={{ textDecoration: 'none' }}>
+                                <div className={styles.courseCard}>
+                                    <img src={mod.image} alt={mod.title} className={styles.courseImage} />
+                                    <div className={styles.courseInfo}>
+                                        <div className={styles.courseTitle}>{mod.title}</div>
+                                        <div className={styles.courseSubtitle}>{mod.subtitle}</div>
+                                    </div>
+                                    <div className={styles.courseProgress}>{mod.progress}</div>
                                 </div>
-                                <div className={styles.courseProgress}>{mod.progress}</div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                     <div className={styles.tipBox}>
