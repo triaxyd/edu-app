@@ -70,3 +70,34 @@
         transform: translateY(0);
     }
 }
+
+.quizButton {
+    margin-top: 50px;
+    padding: 12px 24px;
+    background-color: rgba(12, 13, 143, 0.77);
+    color: #eeeaea;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+}
+.readButton {
+    margin-top: 40px;
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: rgb(255, 202, 0);
+    color: #0d1191;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.buttonRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Adjust spacing as needed */
+    margin-top: 40px;
+}
+

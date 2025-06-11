@@ -1,16 +1,29 @@
 // src/data/courses/intro/lessons/variables.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '@/styles/LessonContent.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { variablesQuiz } from '@/data/courses/intro/quizzes/variablesQuiz';
+import QuizSection from '@/components/Quiz/QuizSection';
+import { markLessonAsRead } from '@/lib/dbUtils';
+import { useAuth } from '@/context/authContext';
 
-export default function VariablesLesson() {
+export default function VariablesLesson({ courseId, lessonId }) {
+    const { user } = useAuth();
+    const [showQuiz, setShowQuiz] = useState(false);
+
+    const handleMarkAsRead = async () => {
+        if (!user) return;
+        await markLessonAsRead(courseId, lessonId, user.uid);
+        alert('Lesson marked as read!');
+    };
+
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Variables and Constants</h1>
             <div className={styles.divider}></div>
             <p className={styles.paragraph}>
-                In programming, a variable is like a container that holds data. You can give this container a name,
+                In programming, a <strong>variable</strong> is like a container that holds data. You can give this container a name,
                 store something inside it, and retrieve or change it later. JavaScript allows you to create variables using the
                 keywords <code>let</code>, <code>const</code>, and historically, <code>var</code>. Each has different characteristics, and choosing the right one
                 is essential for writing clean and predictable code.
@@ -71,6 +84,23 @@ user.name = "Bob"; // This is allowed`}
             <p className={styles.paragraph}>
                 Understanding how to use variables effectively is the first step toward becoming a proficient JavaScript developer.
             </p>
+            <div className={styles.buttonRow}>
+                <button className={styles.readButton} onClick={handleMarkAsRead}>
+                    Mark Lesson as Read
+                </button>
+
+                <button className={styles.quizButton} onClick={() => setShowQuiz(!showQuiz)}>
+                    {showQuiz ? 'Hide Quiz' : 'Take Quiz'}
+                </button>
+            </div>
+
+            {showQuiz && (
+                <QuizSection
+                    courseId={courseId}
+                    lessonId={lessonId}
+                    questions={variablesQuiz}
+                />
+            )}
         </div>
     );
 }

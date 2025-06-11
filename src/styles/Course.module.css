@@ -247,3 +247,14 @@
     font-family: 'Karla', sans-serif;
     margin-top: 4px;
 }
+.navigationLink {
+    font-size: 20px;
+    color: #ffca00;
+    font-family: 'Karla', sans-serif;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.navigationLink:hover {
+    color: #d07d39;
+}
