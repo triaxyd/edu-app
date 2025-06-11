@@ -23,13 +23,13 @@ export default function CourseOverview() {
                     </div>
 
                     <div className={styles.courseList}>
-                        {course.lessons.map((lesson) => (
+                        {course.lessons.map((lesson, index) => (
                             <Link
                                 key={lesson.id}
                                 href={`/course/${courseId}/lesson/${lesson.id}`}
                                 style={{ textDecoration: 'none' }}
                             >
-                                <div className={styles.courseCard}>
+                                <div className={styles.courseCard} style={{ animationDelay: `${0.5 + index * 0.2}s` }}>
                                     <div className={styles.courseInfo}>
                                         <div className={styles.courseTitle}>{lesson.title}</div>
                                         <div className={styles.courseSubtitle}>{lesson.description}</div>

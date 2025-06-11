@@ -1,13 +1,16 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth } from '../lib/firebase';
+import { auth } from '@/lib/firebase';
 import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
+
+import {getDatabase,ref,set} from 'firebase/database';
+import {defaultUserData} from "@/data/defaultUserData";
 
 const AuthContext = createContext();
 
@@ -38,7 +41,13 @@ export function AuthProvider({ children }) {
 
   const register = async (email, password) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userId = userCredential.user.uid;
+
+      // Add user data to Realtime Database
+      const db = getDatabase();
+      await set(ref(db, `users/${userId}`), defaultUserData);
+
       router.push('/home');
       return true;
     } catch (error) {

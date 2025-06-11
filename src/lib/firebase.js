@@ -4,6 +4,7 @@ import { getAuth } from 'firebase/auth';
 const firebaseConfig = {
     apiKey: "AIzaSyD9d_5fQug3l479ejRaTxMGp_dFzwgTVmk",
     authDomain: "jsedu-27cda.firebaseapp.com",
+    databaseURL: "https://jsedu-27cda-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "jsedu-27cda",
     storageBucket: "jsedu-27cda.firebasestorage.app",
     messagingSenderId: "355588287657",

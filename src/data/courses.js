@@ -1,3 +1,4 @@
+// src/data/courses.js
 export const courses = {
     intro: {
         title: 'Introduction to JavaScript',
@@ -14,6 +15,12 @@ export const courses = {
                 title: 'Data Types',
                 description: 'Explore JavaScript data types like strings, numbers, and booleans.',
                 progress: '80%',
+            },
+            {
+                id: 'operators',
+                title: 'Operators',
+                description: 'Get familiar with arithmetic, comparison, and logical operators in JavaScript.',
+                progress: '50%',
             },
         ],
     },
@@ -33,6 +40,12 @@ export const courses = {
                 description: 'Master if-else statements and logical operations to control program flow.',
                 progress: '45%',
             },
+            {
+                id: 'loops',
+                title: 'Loops',
+                description: 'Use for and while loops to repeat tasks efficiently.',
+                progress: '30%',
+            },
         ],
     },
     advanced: {
@@ -50,6 +63,12 @@ export const courses = {
                 title: 'The DOM',
                 description: 'Learn how to interact with the HTML document using the DOM.',
                 progress: '10%',
+            },
+            {
+                id: 'oop',
+                title: 'Object-Oriented Programming',
+                description: 'Dive into objects, classes, and OOP concepts in JavaScript.',
+                progress: '5%',
             },
         ],
     },
