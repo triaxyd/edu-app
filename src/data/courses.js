@@ -5,6 +5,13 @@ export const courses = {
         description: 'Learn what JavaScript is and why it is important.',
         lessons: [
             {
+                id: 'whatisjs',
+                title: 'What is JavaScript?',
+                description: 'An introduction to the JavaScript language and what it is used for.',
+                progress: '0%',
+            },
+
+            {
                 id: 'variables',
                 title: 'Variables and Constants',
                 description: 'Understand how to declare and use variables and constants in JavaScript.',

@@ -6,7 +6,7 @@
     /* in case someone’s on a smaller screen */
     overflow: hidden;
     padding: 24px 100px 24px 250px;
-    background-image: radial-gradient(rgba(100, 101, 174, 0.53) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(130, 159, 224, 0.6) 0.8px, transparent 0.8px);
     background-size: 20px 20px;
 }
 
@@ -36,9 +36,9 @@
 
 .title {
     font-family: 'Source Serif Pro', serif;
-    font-size: 48px;
+    font-size: 60px;
     color: #110F36;
-    margin-bottom: 12px;
+    margin-bottom: 7px;
     font-weight: 550;
 }
 .divider {
