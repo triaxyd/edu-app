@@ -100,4 +100,87 @@
     gap: 10px; /* Adjust spacing as needed */
     margin-top: 40px;
 }
+/* Question container */
+.questionBlock {
+    margin-bottom: 32px;
+    padding: 20px;
+    background-color: #eaeaf1;
+    border: 1px solid #afb0cc;
+    border-radius: 12px;
+}
+
+/* Question text */
+.question {
+    font-size: 18px;
+    font-weight: lighter;
+    margin-bottom: 12px;
+    color: #050d42;
+
+}
+
+/* Radio option list */
+.option {
+    display: block;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background-color: #f7f7fa;
+    border: 1px solid #afb0cc;
+    color: #050d42;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 16px;
+}
+
+.option:hover {
+    background-color: #faf0c4;
+}
+
+/* Correct answer styling */
+.correct {
+    background-color: #b9f1c3 !important;
+    border-color: #4caf50 !important;
+    color: #2f6415;
+}
+
+/* Incorrect answer styling */
+.incorrect {
+    background-color: #f3cfcf !important;
+    border-color: #f44336 !important;
+    color: #a21010;
+}
+
+/* Explanation text */
+.explanation {
+    margin-top: 8px;
+    color: #c51f1f;
+    font-style: italic;
+}
+
+/* Submit and result */
+.quizButton {
+    padding: 12px 24px;
+    font-size: 16px;
+    margin-top: 24px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.quizButton:hover {
+    background-color: #005ac1;
+}
+
+.resultBox {
+    margin-top: 32px;
+    padding: 16px;
+    background-color: #f7f7fa;
+    border-left: 5px solid #4caf50;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #59b454;
+}
 
