@@ -23,3 +23,11 @@ export const saveCumulativeScore = async (courseId, uid, score) => {
     const path = `users/${uid}/courses/${courseId}/cumulative_score`;
     await set(ref(db, path), score);
 };
+
+export const toggleLessonReadStatus = async (courseId, lessonId, currentStatus, uid) => {
+    const db = getDatabase();
+    const path = `users/${uid}/courses/${courseId}/${lessonId}`;
+    await update(ref(db, path), {
+        lesson_read: !currentStatus,
+    });
+};

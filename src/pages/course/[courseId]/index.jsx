@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getDatabase, ref, get } from "firebase/database";
 import { useAuth } from "@/context/authContext";
+import {toggleLessonReadStatus} from "@/lib/dbUtils";
 
 export default function CourseOverview() {
     const router = useRouter();
@@ -48,23 +49,44 @@ export default function CourseOverview() {
 
                     <div className={styles.courseList}>
                         {course.lessons.map((lesson, index) => (
-                            <Link
-                                key={lesson.id}
-                                href={`/course/${courseId}/lesson/${lesson.id}`}
-                                style={{ textDecoration: 'none' }}
-                            >
-                                <div className={styles.courseCard} style={{ animationDelay: `${0.5 + index * 0.2}s` }}>
+                            <div className={styles.courseCard} style={{ animationDelay: `${0.5 + index * 0.2}s` }}>
+                                <Link
+                                    href={`/course/${courseId}/lesson/${lesson.id}`}
+                                    style={{ textDecoration: 'none', flex: 1 }}
+                                >
                                     <div className={styles.courseInfo}>
-                                        <div className={styles.courseTitle}>{lesson.title}</div>
+                                        <div
+                                            className={`${styles.courseTitle} ${
+                                                lesson.id === 'overview' ? styles.overviewTitle : ''
+                                            }`}
+                                        >
+                                            {lesson.title}
+                                        </div>
                                         <div className={styles.courseSubtitle}>{lesson.description}</div>
                                     </div>
+                                </Link>
+
+                                {lesson.id !== 'overview' && (
                                     <img
                                         src={getLessonProgressIcon(lesson.id)}
                                         alt={lessonProgress[lesson.id]?.lesson_read ? "Read" : "Unread"}
-                                        style={{ width: '50px', height: '50px' , marginRight:'20px'}}
+                                        style={{ width: '40px', height: '40px', marginLeft: '16px', cursor: 'pointer' }}
+                                        onClick={async (e) => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            const current = lessonProgress[lesson.id]?.lesson_read || false;
+                                            await toggleLessonReadStatus(courseId, lesson.id, current, user.uid);
+                                            setLessonProgress(prev => ({
+                                                ...prev,
+                                                [lesson.id]: {
+                                                    ...prev[lesson.id],
+                                                    lesson_read: !current
+                                                }
+                                            }));
+                                        }}
                                     />
-                                </div>
-                            </Link>
+                                )}
+                            </div>
                         ))}
                     </div>
                 </div>

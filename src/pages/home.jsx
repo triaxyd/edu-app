@@ -1,43 +1,48 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import SideBar from '@/components/Sidebar/SideBar';
 import { useAuth } from '@/context/authContext';
 import styles from '@/styles/Home.module.css';
 import Link from 'next/link';
-
-const modules = [
-    {
-        id: 'intro',
-        title: 'Introduction to JavaScript',
-        subtitle: 'Learn what JavaScript is and why it is important.',
-        progress: '100%',
-        image: '/illustrations/course1.png',
-    },
-    {
-        id: 'basics',
-        title: 'Basic JavaScript Concepts',
-        subtitle: 'Learn variables, data types and functions.',
-        progress: '70%',
-        image: '/illustrations/course2.png',
-    },
-    {
-        id: 'advanced',
-        title: 'Advanced JavaScript Techniques',
-        subtitle: 'Explore async programming, objects, and the DOM.',
-        progress: '20%',
-        image: '/illustrations/course3.png',
-    },
-];
-
+import {getDatabase, ref, get} from 'firebase/database';
+import {courses} from '@/data/courses';
 
 export default function HomePage() {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const router = useRouter();
+    const [courseProgress, setCourseProgress] = useState({});
 
     useEffect(() => {
-        if (!user) router.push('/');
+        if (!user) {
+            router.push('/');
+            return;
+        }
+
+        const fetchAllProgress = async () => {
+            const db = getDatabase();
+            const updates = {};
+
+            for (const courseId in courses) {
+                const snapshot = await get(ref(db, `users/${user.uid}/courses/${courseId}`));
+                const courseLessons = courses[courseId].lessons.filter(l => l.id !== "overview");
+                const totalLessons = courseLessons.length;
+
+                let readCount = 0;
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    readCount = courseLessons.filter(l => data[l.id]?.lesson_read).length;
+                }
+
+                const percent = totalLessons > 0 ? Math.round((readCount / totalLessons) * 100) : 0;
+                updates[courseId] = percent;
+            }
+
+            setCourseProgress(updates);
+        };
+
+        fetchAllProgress();
     }, [user]);
 
     return (
@@ -58,32 +63,52 @@ export default function HomePage() {
                     <h2 className={styles.sectionTitle}>My Courses</h2>
 
                     <div className={styles.courseList}>
-                        {modules.map((mod) => (
-                            <Link key={mod.id} href={`/course/${mod.id}`} style={{ textDecoration: 'none' }}>
+                        {Object.entries(courses).map(([courseId, course]) => (
+                            <Link key={courseId} href={`/course/${courseId}`} style={{ textDecoration: 'none' }}>
                                 <div className={styles.courseCard}>
-                                    <img src={mod.image} alt={mod.title} className={styles.courseImage} />
+                                    <img
+                                        src={`/illustrations/course${
+                                            courseId === 'intro' ? 1 :
+                                                courseId === 'basics' ? 2 : 3
+                                        }.png`}
+                                        alt={course.title}
+                                        className={styles.courseImage}
+                                    />
                                     <div className={styles.courseInfo}>
-                                        <div className={styles.courseTitle}>{mod.title}</div>
-                                        <div className={styles.courseSubtitle}>{mod.subtitle}</div>
+                                        <div className={styles.courseTitle}>{course.title}</div>
+                                        <div className={styles.courseSubtitle}>{course.description}</div>
                                     </div>
-                                    <div className={styles.courseProgress}>{mod.progress}</div>
+                                    <div className={styles.courseProgress}>
+                                        {courseProgress[courseId] !== undefined
+                                            ? `${courseProgress[courseId]}%`
+                                            : '...'}
+                                    </div>
                                 </div>
                             </Link>
                         ))}
                     </div>
+
                     <div className={styles.tipBox}>
                         <h3 className={styles.tipLabel}>Tip of the Day</h3>
                         <p className={styles.tipText}>
                             You can declare a variable with <code>let</code> and <code>const</code> — but <code>const</code> can’t be reassigned!
                         </p>
                     </div>
+
                     <div className={styles.progressOverview}>
                         <div className={styles.statBlock}>
-                            <div className={styles.statNumber}>3</div>
+                            <div className={styles.statNumber}>{Object.keys(courses).length}</div>
                             <div className={styles.statLabel}>Modules</div>
                         </div>
                         <div className={styles.statBlock}>
-                            <div className={styles.statNumber}>63%</div>
+                            <div className={styles.statNumber}>
+                                {Object.values(courseProgress).length > 0
+                                    ? `${Math.round(
+                                        Object.values(courseProgress).reduce((a, b) => a + b, 0) /
+                                        Object.values(courseProgress).length
+                                    )}%`
+                                    : '...'}
+                            </div>
                             <div className={styles.statLabel}>Average Progress</div>
                         </div>
                     </div>

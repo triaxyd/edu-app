@@ -258,3 +258,12 @@
 .navigationLink:hover {
     color: #d07d39;
 }
+.courseCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.overviewTitle {
+    color: #6165e1; /* or any color you want for quiz overview */
+}
+

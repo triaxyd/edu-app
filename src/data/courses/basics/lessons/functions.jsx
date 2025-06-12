@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
+import { getDatabase, ref, get, update } from "firebase/database";
 import styles from '@/styles/LessonContent.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
@@ -7,15 +8,38 @@ import { functionsQuiz } from '@/data/courses/basics/quizzes/functionsQuiz';
 import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
 
-export default function FunctionsLesson() {
+export default function FunctionsLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
+    const [isRead, setIsRead] = useState(false);
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchStatus = async () => {
+            const db = getDatabase();
+            const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
+            const snapshot = await get(ref(db, path));
+            if (snapshot.exists()) {
+                setIsRead(!!snapshot.val().lesson_read);
+            }
+        };
+
+        fetchStatus();
+    }, [user, courseId, lessonId]);
 
     const handleMarkAsRead = async () => {
         if (!user) return;
-        await markLessonAsRead("basics", "functions", user.uid);
-        alert("Lesson marked as read!");
+
+        const newStatus = !isRead;
+        const db = getDatabase();
+        const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
+        await update(ref(db, path), {
+            lesson_read: newStatus,
+        });
+
+        setIsRead(newStatus);
     };
+
 
     return (
         <div className={styles.lessonContainer}>
@@ -92,9 +116,13 @@ let result = add(3, 4); // result is 7`}
                 Understanding functions is a major step forward in learning JavaScript, and they'll be used in almost every program you write.
             </p>
             <div className={styles.buttonRow}>
-                <button className={styles.readButton} onClick={handleMarkAsRead}>
-                    Mark Lesson as Read
+                <button
+                    className={styles.readButton}
+                    onClick={handleMarkAsRead}
+                >
+                    {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
+
 
                 <button className={styles.quizButton} onClick={() => setShowQuiz(!showQuiz)}>
                     {showQuiz ? 'Hide Quiz' : 'Take Quiz'}

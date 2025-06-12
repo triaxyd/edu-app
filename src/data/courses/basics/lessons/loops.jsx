@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
+import { getDatabase, ref, get, update } from "firebase/database";
 import styles from '@/styles/LessonContent.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
@@ -7,15 +8,38 @@ import { loopsQuiz } from '@/data/courses/basics/quizzes/loopsQuiz';
 import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
 
-export default function LoopsLesson() {
+export default function LoopsLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
+    const [isRead, setIsRead] = useState(false);
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchStatus = async () => {
+            const db = getDatabase();
+            const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
+            const snapshot = await get(ref(db, path));
+            if (snapshot.exists()) {
+                setIsRead(!!snapshot.val().lesson_read);
+            }
+        };
+
+        fetchStatus();
+    }, [user, courseId, lessonId]);
 
     const handleMarkAsRead = async () => {
         if (!user) return;
-        await markLessonAsRead("basics", "loops", user.uid);
-        alert("Lesson marked as read!");
+
+        const newStatus = !isRead;
+        const db = getDatabase();
+        const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
+        await update(ref(db, path), {
+            lesson_read: newStatus,
+        });
+
+        setIsRead(newStatus);
     };
+
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Loops in JavaScript</h1>
@@ -98,8 +122,11 @@ for (let fruit of fruits) {
                 Loops are a core building block in programming. Mastering them allows you to handle repetitive tasks, process collections, and control flow with precision.
             </p>
             <div className={styles.buttonRow}>
-                <button className={styles.readButton} onClick={handleMarkAsRead}>
-                    Mark Lesson as Read
+                <button
+                    className={styles.readButton}
+                    onClick={handleMarkAsRead}
+                >
+                    {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
 
                 <button className={styles.quizButton} onClick={() => setShowQuiz(!showQuiz)}>

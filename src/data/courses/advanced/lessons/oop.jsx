@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import { getDatabase, ref, get, update } from "firebase/database";
 import styles from '@/styles/LessonContent.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
@@ -7,15 +8,38 @@ import { oopQuiz } from '@/data/courses/advanced/quizzes/oopQuiz';
 import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
 
-export default function OOPLesson() {
+export default function OOPLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
+    const [isRead, setIsRead] = useState(false);
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchStatus = async () => {
+            const db = getDatabase();
+            const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
+            const snapshot = await get(ref(db, path));
+            if (snapshot.exists()) {
+                setIsRead(!!snapshot.val().lesson_read);
+            }
+        };
+
+        fetchStatus();
+    }, [user, courseId, lessonId]);
 
     const handleMarkAsRead = async () => {
         if (!user) return;
-        await markLessonAsRead("advanced", "oop", user.uid);
-        alert("Lesson marked as read!");
+
+        const newStatus = !isRead;
+        const db = getDatabase();
+        const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
+        await update(ref(db, path), {
+            lesson_read: newStatus,
+        });
+
+        setIsRead(newStatus);
     };
+
 
     return (
         <div className={styles.lessonContainer}>
@@ -111,9 +135,13 @@ counter.increment(); // Output: 1
                 While JavaScript supports multiple paradigms, learning OOP is crucial for writing clean, maintainable code in large applications.
             </p>
             <div className={styles.buttonRow}>
-                <button className={styles.readButton} onClick={handleMarkAsRead}>
-                    Mark Lesson as Read
+                <button
+                    className={styles.readButton}
+                    onClick={handleMarkAsRead}
+                >
+                    {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
+
 
                 <button className={styles.quizButton} onClick={() => setShowQuiz(!showQuiz)}>
                     {showQuiz ? 'Hide Quiz' : 'Take Quiz'}
