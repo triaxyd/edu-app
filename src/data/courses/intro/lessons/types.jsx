@@ -33,11 +33,11 @@ export default function DataTypesLesson() {
                 JavaScript includes several <strong>primitive</strong> (basic) data types:
             </p>
             <p className={styles.paragraph}>
-                • 🔢 <strong>Number</strong>: for all numbers, including decimals<br/>
-                • 📝 <strong>String</strong>: text enclosed in quotes<br/>
-                • ✅ <strong>Boolean</strong>: either <code>true</code> or <code>false</code><br/>
-                • ❌ <strong>Null</strong>: an intentional absence of a value<br/>
-                • 🤷‍♂️ <strong>Undefined</strong>: a variable that has been declared but not assigned<br/>
+                •  <strong>Number</strong>: for all numbers, including decimals<br/>
+                •  <strong>String</strong>: text enclosed in quotes<br/>
+                •  <strong>Boolean</strong>: either <code>true</code> or <code>false</code><br/>
+                •  <strong>Null</strong>: an intentional absence of a value<br/>
+                • ️ <strong>Undefined</strong>: a variable that has been declared but not assigned<br/>
             </p>
 
             <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
@@ -53,8 +53,8 @@ let score;                 // Undefined`}
                 In addition to primitives, JavaScript also supports **complex data types**:
             </p>
             <p className={styles.paragraph}>
-                • 🧱 <strong>Objects</strong>: collections of key-value pairs<br/>
-                • 📦 <strong>Arrays</strong>: ordered lists of values<br/>
+                •  <strong>Objects</strong>: collections of key-value pairs<br/>
+                •  <strong>Arrays</strong>: ordered lists of values<br/>
             </p>
 
             <SyntaxHighlighter language="javascript" style={vscDarkPlus}>

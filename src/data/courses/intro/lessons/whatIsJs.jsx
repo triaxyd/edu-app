@@ -33,13 +33,15 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                 and learning it opens doors to a wide range of fields like frontend development, backend APIs with Node.js, mobile apps, and even games.
             </p>
             <p className={styles.paragraph}>
-                If you know JavaScript, you can:
+                <strong>If you know JavaScript, you can:</strong>
             </p>
             <p className={styles.paragraph}>
-                • 🌐 Build interactive websites<br/>
-                • 📱 Create mobile applications<br/>
-                • 🖥️ Develop desktop software<br/>
-                • ⚙️ Work with backend services using Node.js<br/>
+                <strong>
+                •  Build interactive websites<br/>
+                •  Create mobile applications<br/>
+                •  Develop desktop software<br/>
+                •  Work with backend services using Node.js<br/>
+                </strong>
             </p>
 
             <h2 className={styles.subheading}>Where Does JavaScript Run?</h2>
@@ -57,9 +59,9 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                 JavaScript works hand-in-hand with HTML and CSS:
             </p>
             <p className={styles.paragraph}>
-                • 🧱 <strong>HTML</strong> provides the structure of the web page<br/>
-                • 🎨 <strong>CSS</strong> provides the styling<br/>
-                • ⚙️ <strong>JavaScript</strong> adds interactivity and logic<br/>
+                •  <strong>HTML</strong> provides the structure of the web page<br/>
+                •  <strong>CSS</strong> provides the styling<br/>
+                •  <strong>JavaScript</strong> adds interactivity and logic<br/>
             </p>
             <p className={styles.paragraph}>
                 For example, JavaScript can change the content of a web page without needing to reload it, something HTML and CSS can't do alone.
