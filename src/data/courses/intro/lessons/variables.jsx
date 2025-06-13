@@ -6,9 +6,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { variablesQuiz } from '@/data/courses/intro/quizzes/variablesQuiz';
 import QuizSection from '@/components/Quiz/QuizSection';
-import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
-import { setCourseDifficulty } from '@/lib/adaptiveLearning';
 import VariablesExtra from '@/components/ExtraContent/VariablesExtra';
 
 
@@ -17,7 +15,6 @@ export default function VariablesLesson({ courseId, lessonId }) {
     const [isRead, setIsRead] = useState(false);
     const [showQuiz, setShowQuiz] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
-    const [difficultyLevel, setDifficultyLevel] = useState(1);
     const [showExtra, setShowExtra] = useState(false);
 
     useEffect(() => {
@@ -38,26 +35,6 @@ export default function VariablesLesson({ courseId, lessonId }) {
 
         fetchStatus();
     }, [user, courseId, lessonId]);
-    useEffect(() => {
-        if (!user) return;
-
-        const fetchDifficulty = async () => {
-            const db = getDatabase();
-            const path = `users/${user.uid}/difficulty_level`;
-            const snapshot = await get(ref(db, path));
-
-            if (snapshot.exists()) {
-                const level = snapshot.val();
-                if (typeof level === 'number') {
-                    setDifficultyLevel(level);
-                }
-            }
-        };
-
-        fetchDifficulty();
-    }, [user]);
-
-
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -72,6 +49,7 @@ export default function VariablesLesson({ courseId, lessonId }) {
         setIsRead(newStatus);
     };
 
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Variables and Constants</h1>
@@ -165,7 +143,7 @@ user.name = "Bob"; // This is allowed`}
                     {showExtra ? "Hide Extra Content" : "See More"}
                 </button>
 
-                {showExtra && <VariablesExtra difficultyLevel={difficultyLevel} />}
+                {showExtra && <VariablesExtra difficultyLevel={levelForThisLesson} />}
             </div>
 
 
@@ -174,14 +152,7 @@ user.name = "Bob"; // This is allowed`}
                     courseId={courseId}
                     lessonId={lessonId}
                     questions={variablesQuiz}
-                    onScore={async () => {
-                        if (user) {
-                            const updated = await setCourseDifficulty(user.uid, courseId);
-                            if (typeof updated === 'number') {
-                                setDifficultyLevel(updated);
-                            }
-                        }
-                    }}
+                    onScore={(newPercent) => setQuizScore(newPercent)}
                 />
             )}
         </div>

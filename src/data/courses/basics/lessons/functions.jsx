@@ -8,14 +8,12 @@ import { functionsQuiz } from '@/data/courses/basics/quizzes/functionsQuiz';
 import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
 import FunctionsExtra from '@/components/ExtraContent/FunctionsExtra';
-import { setCourseDifficulty } from '@/lib/adaptiveLearning';
 
 export default function FunctionsLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
-    const [difficultyLevel, setDifficultyLevel] = useState(1);
     const [showExtra, setShowExtra] = useState(false);
 
     useEffect(() => {
@@ -37,25 +35,6 @@ export default function FunctionsLesson({courseId, lessonId}) {
         fetchStatus();
     }, [user, courseId, lessonId]);
 
-    useEffect(() => {
-        if (!user) return;
-
-        const fetchDifficulty = async () => {
-            const db = getDatabase();
-            const path = `users/${user.uid}/difficulty_level`;
-            const snapshot = await get(ref(db, path));
-
-            if (snapshot.exists()) {
-                const level = snapshot.val();
-                if (typeof level === 'number') {
-                    setDifficultyLevel(level);
-                }
-            }
-        };
-
-        fetchDifficulty();
-    }, [user]);
-
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -70,6 +49,7 @@ export default function FunctionsLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
 
     return (
         <div className={styles.lessonContainer}>
@@ -176,19 +156,14 @@ let result = add(3, 4); // result is 7`}
 
             </div>
 
-            {showExtra && <FunctionsExtra difficultyLevel={difficultyLevel} />}
+            {showExtra && <FunctionsExtra difficultyLevel={levelForThisLesson} />}
 
             {showQuiz && (
                 <QuizSection
                     courseId="basics"
                     lessonId="functions"
                     questions={functionsQuiz}
-                    onScore={async () => {
-                        if (user) {
-                            const level = await setCourseDifficulty(user.uid, courseId);
-                            setDifficultyLevel(level);
-                        }
-                    }}
+                    onScore={(newPercent) => setQuizScore(newPercent)}
                 />
             )}
         </div>

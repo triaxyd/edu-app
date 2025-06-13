@@ -7,7 +7,6 @@ import QuizSection from '@/components/Quiz/QuizSection';
 import { dataTypesQuiz } from '@/data/courses/intro/quizzes/dataTypesQuiz';
 import { useAuth } from '@/context/authContext';
 import TypesExtra from '@/components/ExtraContent/TypesExtra';
-import { setCourseDifficulty } from '@/lib/adaptiveLearning'; // if you're updating difficulty dynamically
 
 
 export default function DataTypesLesson({courseId, lessonId}) {
@@ -16,26 +15,8 @@ export default function DataTypesLesson({courseId, lessonId}) {
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
     const [showExtra, setShowExtra] = useState(false);
-    const [difficultyLevel, setDifficultyLevel] = useState(1);
 
-    useEffect(() => {
-        if (!user) return;
 
-        const fetchDifficultyLevel = async () => {
-            const db = getDatabase();
-            const path = `users/${user.uid}/difficulty_level`;
-            const snapshot = await get(ref(db, path));
-
-            if (snapshot.exists()) {
-                const level = snapshot.val();
-                if (typeof level === 'number') {
-                    setDifficultyLevel(level);
-                }
-            }
-        };
-
-        fetchDifficultyLevel();
-    }, [user]);
     useEffect(() => {
         if (!user) return;
 
@@ -67,6 +48,8 @@ export default function DataTypesLesson({courseId, lessonId}) {
 
         setIsRead(newStatus);
     };
+
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
 
 
     return (
@@ -166,19 +149,14 @@ typeof null;        // "object" ← this is a well-known JavaScript quirk!`}
                 </button>
             </div>
 
-            {showExtra && <TypesExtra difficultyLevel={difficultyLevel} />}
+            {showExtra && <TypesExtra difficultyLevel={levelForThisLesson} />}
 
             {showQuiz && (
                 <QuizSection
                     courseId={courseId}
                     lessonId={lessonId}
                     questions={dataTypesQuiz}
-                    onScore={async () => {
-                        if (user) {
-                            const updatedLevel = await setCourseDifficulty(user.uid, courseId);
-                            setDifficultyLevel(updatedLevel);
-                        }
-                    }}
+                    onScore={(newPercent) => setQuizScore(newPercent)}
                 />
             )}
         </div>

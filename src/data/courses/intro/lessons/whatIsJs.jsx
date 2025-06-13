@@ -6,7 +6,6 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import QuizSection from "@/components/Quiz/QuizSection";
 import {introToJsQuiz} from "@/data/courses/intro/quizzes/introQuiz";
 import {useAuth} from "@/context/authContext";
-import { setCourseDifficulty } from '@/lib/adaptiveLearning';
 import IntroToJsExtra from "@/components/ExtraContent/IntroToJsExtra";
 
 export default function IntroToJsLesson({courseId, lessonId}) {
@@ -14,9 +13,7 @@ export default function IntroToJsLesson({courseId, lessonId}) {
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
-    const [difficultyLevel, setDifficultyLevel] = useState(1);
     const [showExtra, setShowExtra] = useState(false);
-
 
     useEffect(() => {
         if (!user) return;
@@ -36,27 +33,6 @@ export default function IntroToJsLesson({courseId, lessonId}) {
 
         fetchStatus();
     }, [user, courseId, lessonId]);
-    useEffect(() => {
-        const fetchDifficultyLevel = async () => {
-            if (!user) return;
-
-            const db = getDatabase();
-            const path = `users/${user.uid}/difficulty_level`;
-            const snapshot = await get(ref(db, path));
-
-            if (snapshot.exists()) {
-                const level = snapshot.val();
-                console.log('Fetched difficulty level:', level);
-                if (typeof level === 'number') {
-                    console.log('is number', level);
-                    setDifficultyLevel(level);
-                }
-            }
-        };
-
-        fetchDifficultyLevel();
-    }, [user]);
-
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -70,6 +46,8 @@ export default function IntroToJsLesson({courseId, lessonId}) {
 
         setIsRead(newStatus);
     };
+
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Introduction to JavaScript</h1>
@@ -175,7 +153,7 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                 </button>
 
                 {showExtra && (
-                    <IntroToJsExtra difficultyLevel={difficultyLevel} />
+                    <IntroToJsExtra difficultyLevel={levelForThisLesson} />
                 )}
             </div>
 
@@ -184,21 +162,7 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                 courseId={courseId}
                 lessonId={lessonId}
                 questions={introToJsQuiz}
-                onScore={async () => {
-                    if (user) {
-                        await setCourseDifficulty(user.uid, courseId);
-
-                        const db = getDatabase();
-                        const path = `users/${user.uid}/difficulty_level`;
-                        const snapshot = await get(ref(db, path));
-                        if (snapshot.exists()) {
-                            const level = snapshot.val();
-                            if (typeof level === 'number') {
-                                setDifficultyLevel(level);
-                            }
-                        }
-                    }
-                }}
+                onScore={(newPercent) => setQuizScore(newPercent)}
             />}
 
         </div>

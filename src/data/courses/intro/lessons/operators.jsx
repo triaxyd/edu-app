@@ -7,7 +7,6 @@ import QuizSection from '@/components/Quiz/QuizSection';
 import { operatorsQuiz } from '@/data/courses/intro/quizzes/operatorsQuiz';
 import { useAuth } from '@/context/authContext';
 import OperatorsExtra from '@/components/ExtraContent/OperatorsExtra';
-import { setCourseDifficulty } from '@/lib/adaptiveLearning';
 
 export default function OperatorsLesson( {courseId, lessonId}) {
     const { user } = useAuth();
@@ -35,25 +34,6 @@ export default function OperatorsLesson( {courseId, lessonId}) {
 
         fetchStatus();
     }, [user, courseId, lessonId]);
-    useEffect(() => {
-        if (!user) return;
-
-        const fetchDifficulty = async () => {
-            const db = getDatabase();
-            const path = `users/${user.uid}/difficulty_level`;
-            const snapshot = await get(ref(db, path));
-
-            if (snapshot.exists()) {
-                const level = snapshot.val();
-                if (typeof level === 'number') {
-                    setDifficultyLevel(level);
-                }
-            }
-        };
-
-        fetchDifficulty();
-    }, [user]);
-
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -67,7 +47,7 @@ export default function OperatorsLesson( {courseId, lessonId}) {
 
         setIsRead(newStatus);
     };
-
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>JavaScript Operators</h1>
@@ -181,7 +161,7 @@ total += 5;  // total is now 15`}
 
             </div>
 
-            {showExtra && <OperatorsExtra difficultyLevel={difficultyLevel} />}
+            {showExtra && <OperatorsExtra difficultyLevel={levelForThisLesson} />}
 
 
             {showQuiz && (
@@ -189,6 +169,7 @@ total += 5;  // total is now 15`}
                     courseId="intro"
                     lessonId="operators"
                     questions={operatorsQuiz}
+                    onScore={(newPercent) => setQuizScore(newPercent)}
                 />
             )}
 

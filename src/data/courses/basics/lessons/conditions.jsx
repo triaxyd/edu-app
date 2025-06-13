@@ -6,7 +6,6 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import QuizSection from '@/components/Quiz/QuizSection';
 import { conditionsQuiz } from '@/data/courses/basics/quizzes/conditionsQuiz';
 import ConditionsExtra from '@/components/ExtraContent/ConditionsExtra';
-import { setCourseDifficulty } from '@/lib/adaptiveLearning';
 import { useAuth } from '@/context/authContext';
 
 export default function ConditionsLesson({courseId, lessonId}) {
@@ -14,7 +13,6 @@ export default function ConditionsLesson({courseId, lessonId}) {
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
-    const [difficultyLevel, setDifficultyLevel] = useState(1);
     const [showExtra, setShowExtra] = useState(false);
 
     useEffect(() => {
@@ -36,25 +34,6 @@ export default function ConditionsLesson({courseId, lessonId}) {
         fetchStatus();
     }, [user, courseId, lessonId]);
 
-    useEffect(() => {
-        if (!user) return;
-
-        const fetchDifficulty = async () => {
-            const db = getDatabase();
-            const path = `users/${user.uid}/difficulty_level`;
-            const snapshot = await get(ref(db, path));
-
-            if (snapshot.exists()) {
-                const level = snapshot.val();
-                if (typeof level === 'number') {
-                    setDifficultyLevel(level);
-                }
-            }
-        };
-
-        fetchDifficulty();
-    }, [user]);
-
     const handleMarkAsRead = async () => {
         if (!user) return;
 
@@ -68,6 +47,7 @@ export default function ConditionsLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
 
     return (
         <div className={styles.lessonContainer}>
@@ -192,19 +172,14 @@ console.log(message);`}
 
 
             </div>
-            {showExtra && <ConditionsExtra difficultyLevel={difficultyLevel} />}
+            {showExtra && <ConditionsExtra difficultyLevel={levelForThisLesson} />}
 
             {showQuiz && (
                 <QuizSection
                     courseId="basics"
                     lessonId="conditions"
                     questions={conditionsQuiz}
-                    onScore={async () => {
-                        if (user) {
-                            const newLevel = await setCourseDifficulty(user.uid, courseId);
-                            setDifficultyLevel(newLevel);
-                        }
-                    }}
+                    onScore={(newPercent) => setQuizScore(newPercent)}
                 />
 
             )}

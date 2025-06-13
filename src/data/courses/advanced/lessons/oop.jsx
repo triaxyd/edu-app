@@ -8,7 +8,6 @@ import { oopQuiz } from '@/data/courses/advanced/quizzes/oopQuiz';
 import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
 import OopExtra from '@/components/ExtraContent/OopExtra';
-import { setCourseDifficulty } from '@/lib/adaptiveLearning';
 
 
 export default function OOPLesson({courseId, lessonId}) {
@@ -16,7 +15,6 @@ export default function OOPLesson({courseId, lessonId}) {
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
-    const [difficultyLevel, setDifficultyLevel] = useState(1);
     const [showExtra, setShowExtra] = useState(false);
 
     useEffect(() => {
@@ -37,24 +35,6 @@ export default function OOPLesson({courseId, lessonId}) {
 
         fetchStatus();
     }, [user, courseId, lessonId]);
-    useEffect(() => {
-        if (!user) return;
-
-        const fetchDifficulty = async () => {
-            const db = getDatabase();
-            const path = `users/${user.uid}/difficulty_level`;
-            const snapshot = await get(ref(db, path));
-            if (snapshot.exists()) {
-                const level = snapshot.val();
-                if (typeof level === 'number') {
-                    setDifficultyLevel(level);
-                }
-            }
-        };
-
-        fetchDifficulty();
-    }, [user]);
-
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -69,6 +49,7 @@ export default function OOPLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
 
     return (
         <div className={styles.lessonContainer}>
@@ -193,19 +174,14 @@ counter.increment(); // Output: 1
                 </button>
 
             </div>
-            {showExtra && <OopExtra difficultyLevel={difficultyLevel} />}
+            {showExtra && <OopExtra difficultyLevel={levelForThisLesson} />}
 
             {showQuiz && (
                 <QuizSection
                     courseId="advanced"
                     lessonId="oop"
                     questions={oopQuiz}
-                    onScore={async () => {
-                        if (user) {
-                            const newLevel = await setCourseDifficulty(user.uid, courseId);
-                            setDifficultyLevel(newLevel);
-                        }
-                    }}
+                    onScore={(newPercent) => setQuizScore(newPercent)}
                 />
 
             )}
