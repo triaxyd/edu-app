@@ -29,6 +29,13 @@
 .subheading code{
     color: #6165e1;
 }
+.subheadingOverview {
+    font-size: 38px;
+    font-weight: normal;
+    margin-top: 20px;
+    color: #6165e1;
+    font-family: 'Karla', serif;
+}
 
 .paragraph {
     font-size: 24px;

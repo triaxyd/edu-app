@@ -4,12 +4,15 @@ import { useAuth } from '@/context/authContext';
 import { saveLessonProgress, markLessonAsRead } from '@/lib/dbUtils';
 import { introOverviewQuiz } from '@/data/courses/intro/quizzes/overviewQuiz';
 import { saveCumulativeScore } from '@/lib/dbUtils';
+import {get, getDatabase, ref} from "firebase/database";
 
 export default function IntroOverview() {
     const { user } = useAuth();
     const [answers, setAnswers] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [score, setScore] = useState(0);
+    const [lastScore, setLastScore] = useState(null);
+
 
     const handleChange = (qId, optionIndex) => {
         setAnswers(prev => ({ ...prev, [qId]: optionIndex }));
@@ -28,9 +31,32 @@ export default function IntroOverview() {
         }
     }, [submitted, user]);
 
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchLastScore = async () => {
+            const db = getDatabase();
+            const path = `users/${user.uid}/courses/intro/cumulative_score`;
+            const snapshot = await get(ref(db, path));
+            if (snapshot.exists()) {
+                const savedScore = snapshot.val();
+                if (typeof savedScore === 'number' && savedScore > 0) {
+                    setLastScore(savedScore);
+                }
+            }
+        };
+
+        fetchLastScore();
+    }, [user]);
+
+
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Final Review: Introduction to JavaScript</h1>
+            {lastScore !== null && (
+                <h2 className={styles.subheadingOverview}>Last Score: {lastScore}%</h2>
+            )}
+
             <div className={styles.divider}></div>
             <p className={styles.paragraph}>
                 Test your knowledge across all lessons. Select the best answer for each question and submit to get your score.

@@ -24,7 +24,8 @@ export default function CourseOverview() {
             const userPath = `users/${user.uid}/courses/${courseId}`;
             const snapshot = await get(ref(db, userPath));
             if (snapshot.exists()) {
-                setLessonProgress(snapshot.val());
+                const data = snapshot.val();
+                setLessonProgress(data || {});
             }
         };
 
@@ -66,7 +67,13 @@ export default function CourseOverview() {
                                     </div>
                                 </Link>
 
-                                {lesson.id !== 'overview' && (
+                                {lesson.id === 'overview' ? (
+                                    <div className={styles.courseProgress}>
+                                        {lessonProgress?.cumulative_score != null
+                                            ? `${lessonProgress.cumulative_score}%`
+                                            : '0%'}
+                                    </div>
+                                ) : (
                                     <img
                                         src={getLessonProgressIcon(lesson.id)}
                                         alt={lessonProgress[lesson.id]?.lesson_read ? "Read" : "Unread"}
