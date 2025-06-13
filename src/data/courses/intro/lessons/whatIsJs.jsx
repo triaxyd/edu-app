@@ -5,14 +5,18 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import QuizSection from "@/components/Quiz/QuizSection";
 import {introToJsQuiz} from "@/data/courses/intro/quizzes/introQuiz";
-import {markLessonAsRead} from "@/lib/dbUtils";
 import {useAuth} from "@/context/authContext";
+import { setCourseDifficulty } from '@/lib/adaptiveLearning';
+import IntroToJsExtra from "@/components/ExtraContent/IntroToJsExtra";
 
 export default function IntroToJsLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
+    const [difficultyLevel, setDifficultyLevel] = useState(1);
+    const [showExtra, setShowExtra] = useState(false);
+
 
     useEffect(() => {
         if (!user) return;
@@ -32,6 +36,27 @@ export default function IntroToJsLesson({courseId, lessonId}) {
 
         fetchStatus();
     }, [user, courseId, lessonId]);
+    useEffect(() => {
+        const fetchDifficultyLevel = async () => {
+            if (!user) return;
+
+            const db = getDatabase();
+            const path = `users/${user.uid}/difficulty_level`;
+            const snapshot = await get(ref(db, path));
+
+            if (snapshot.exists()) {
+                const level = snapshot.val();
+                console.log('Fetched difficulty level:', level);
+                if (typeof level === 'number') {
+                    console.log('is number', level);
+                    setDifficultyLevel(level);
+                }
+            }
+        };
+
+        fetchDifficultyLevel();
+    }, [user]);
+
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -127,6 +152,7 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
 
+
                 <button
                     className={styles.quizButton}
                     onClick={() => setShowQuiz(!showQuiz)}
@@ -134,15 +160,46 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                     {showQuiz ? 'Hide Quiz' : (quizScore > 0 ? 'Retake Quiz' : 'Take Quiz')}
                 </button>
 
+
                 {quizScore > 0 && (
                     <div className={styles.quizResult}>
                         Last Score: {quizScore}%
                     </div>
                 )}
+
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? "Hide Extra Content" : "See More"}
+                </button>
+
+                {showExtra && (
+                    <IntroToJsExtra difficultyLevel={difficultyLevel} />
+                )}
             </div>
 
 
-            {showQuiz && <QuizSection courseId={courseId} lessonId={lessonId} questions={introToJsQuiz} />}
+            {showQuiz && <QuizSection
+                courseId={courseId}
+                lessonId={lessonId}
+                questions={introToJsQuiz}
+                onScore={async () => {
+                    if (user) {
+                        await setCourseDifficulty(user.uid, courseId);
+
+                        const db = getDatabase();
+                        const path = `users/${user.uid}/difficulty_level`;
+                        const snapshot = await get(ref(db, path));
+                        if (snapshot.exists()) {
+                            const level = snapshot.val();
+                            if (typeof level === 'number') {
+                                setDifficultyLevel(level);
+                            }
+                        }
+                    }
+                }}
+            />}
 
         </div>
     );

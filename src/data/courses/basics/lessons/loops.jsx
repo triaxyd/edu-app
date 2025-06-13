@@ -5,14 +5,19 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import QuizSection from '@/components/Quiz/QuizSection';
 import { loopsQuiz } from '@/data/courses/basics/quizzes/loopsQuiz';
-import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
+import LoopsExtra from '@/components/ExtraContent/LoopsExtra';
+import { setCourseDifficulty } from '@/lib/adaptiveLearning';
+
 
 export default function LoopsLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
+    const [difficultyLevel, setDifficultyLevel] = useState(1);
+    const [showExtra, setShowExtra] = useState(false);
+
     useEffect(() => {
         if (!user) return;
 
@@ -31,6 +36,25 @@ export default function LoopsLesson({courseId, lessonId}) {
 
         fetchStatus();
     }, [user, courseId, lessonId]);
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchDifficulty = async () => {
+            const db = getDatabase();
+            const path = `users/${user.uid}/difficulty_level`;
+            const snapshot = await get(ref(db, path));
+
+            if (snapshot.exists()) {
+                const level = snapshot.val();
+                if (typeof level === 'number') {
+                    setDifficultyLevel(level);
+                }
+            }
+        };
+
+        fetchDifficulty();
+    }, [user]);
+
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -146,14 +170,29 @@ for (let fruit of fruits) {
                         Score: {quizScore}%
                     </div>
                 )}
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
+
             </div>
+            {showExtra && <LoopsExtra difficultyLevel={difficultyLevel} />}
 
             {showQuiz && (
                 <QuizSection
                     courseId="basics"
                     lessonId="loops"
                     questions={loopsQuiz}
+                    onScore={async () => {
+                        if (user) {
+                            const newLevel = await setCourseDifficulty(user.uid, courseId);
+                            setDifficultyLevel(newLevel);
+                        }
+                    }}
                 />
+
             )}
         </div>
     );

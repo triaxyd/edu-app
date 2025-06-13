@@ -5,14 +5,37 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import QuizSection from '@/components/Quiz/QuizSection';
 import { dataTypesQuiz } from '@/data/courses/intro/quizzes/dataTypesQuiz';
-import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
+import TypesExtra from '@/components/ExtraContent/TypesExtra';
+import { setCourseDifficulty } from '@/lib/adaptiveLearning'; // if you're updating difficulty dynamically
+
 
 export default function DataTypesLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
+    const [showExtra, setShowExtra] = useState(false);
+    const [difficultyLevel, setDifficultyLevel] = useState(1);
+
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchDifficultyLevel = async () => {
+            const db = getDatabase();
+            const path = `users/${user.uid}/difficulty_level`;
+            const snapshot = await get(ref(db, path));
+
+            if (snapshot.exists()) {
+                const level = snapshot.val();
+                if (typeof level === 'number') {
+                    setDifficultyLevel(level);
+                }
+            }
+        };
+
+        fetchDifficultyLevel();
+    }, [user]);
     useEffect(() => {
         if (!user) return;
 
@@ -134,13 +157,28 @@ typeof null;        // "object" ← this is a well-known JavaScript quirk!`}
                         Last Score: {quizScore}%
                     </div>
                 )}
+
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
             </div>
+
+            {showExtra && <TypesExtra difficultyLevel={difficultyLevel} />}
 
             {showQuiz && (
                 <QuizSection
-                    courseId="intro"
-                    lessonId="types"
+                    courseId={courseId}
+                    lessonId={lessonId}
                     questions={dataTypesQuiz}
+                    onScore={async () => {
+                        if (user) {
+                            const updatedLevel = await setCourseDifficulty(user.uid, courseId);
+                            setDifficultyLevel(updatedLevel);
+                        }
+                    }}
                 />
             )}
         </div>

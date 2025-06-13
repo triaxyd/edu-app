@@ -7,12 +7,18 @@ import QuizSection from '@/components/Quiz/QuizSection';
 import { oopQuiz } from '@/data/courses/advanced/quizzes/oopQuiz';
 import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
+import OopExtra from '@/components/ExtraContent/OopExtra';
+import { setCourseDifficulty } from '@/lib/adaptiveLearning';
+
 
 export default function OOPLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
+    const [difficultyLevel, setDifficultyLevel] = useState(1);
+    const [showExtra, setShowExtra] = useState(false);
+
     useEffect(() => {
         if (!user) return;
 
@@ -31,6 +37,24 @@ export default function OOPLesson({courseId, lessonId}) {
 
         fetchStatus();
     }, [user, courseId, lessonId]);
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchDifficulty = async () => {
+            const db = getDatabase();
+            const path = `users/${user.uid}/difficulty_level`;
+            const snapshot = await get(ref(db, path));
+            if (snapshot.exists()) {
+                const level = snapshot.val();
+                if (typeof level === 'number') {
+                    setDifficultyLevel(level);
+                }
+            }
+        };
+
+        fetchDifficulty();
+    }, [user]);
+
 
     const handleMarkAsRead = async () => {
         if (!user) return;
@@ -126,7 +150,7 @@ max.speak(); // Output: Max barks`}
 
 const counter = new Counter();
 counter.increment(); // Output: 1
-// counter.#count; ❌ Error: Private field '#count' must be declared in an enclosing class`}
+// counter.#count;  Error: Private field '#count' must be declared in an enclosing class`}
             </SyntaxHighlighter>
 
             <h2 className={styles.subheading}>Why Use OOP?</h2>
@@ -160,14 +184,30 @@ counter.increment(); // Output: 1
                         Score: {quizScore}%
                     </div>
                 )}
+
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
+
             </div>
+            {showExtra && <OopExtra difficultyLevel={difficultyLevel} />}
 
             {showQuiz && (
                 <QuizSection
                     courseId="advanced"
                     lessonId="oop"
                     questions={oopQuiz}
+                    onScore={async () => {
+                        if (user) {
+                            const newLevel = await setCourseDifficulty(user.uid, courseId);
+                            setDifficultyLevel(newLevel);
+                        }
+                    }}
                 />
+
             )}
 
         </div>

@@ -202,4 +202,20 @@
     align-self: center;
 }
 
+.moreButton {
+    padding: 12px 24px;
+    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom:20px;
+    background-color: #ffca00;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 
+}
+
+.moreButton:hover {
+    background-color: #d9a116;
+}
