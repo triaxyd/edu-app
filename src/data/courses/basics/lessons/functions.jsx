@@ -12,6 +12,8 @@ export default function FunctionsLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
+    const [quizScore, setQuizScore] = useState(null);
+
     useEffect(() => {
         if (!user) return;
 
@@ -20,7 +22,11 @@ export default function FunctionsLesson({courseId, lessonId}) {
             const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
             const snapshot = await get(ref(db, path));
             if (snapshot.exists()) {
-                setIsRead(!!snapshot.val().lesson_read);
+                const data = snapshot.val();
+                setIsRead(!!data.lesson_read);
+                if (typeof data.lesson_score === 'number') {
+                    setQuizScore(data.lesson_score);
+                }
             }
         };
 
@@ -124,9 +130,18 @@ let result = add(3, 4); // result is 7`}
                 </button>
 
 
-                <button className={styles.quizButton} onClick={() => setShowQuiz(!showQuiz)}>
-                    {showQuiz ? 'Hide Quiz' : 'Take Quiz'}
+                <button
+                    className={styles.quizButton}
+                    onClick={() => setShowQuiz(!showQuiz)}
+                >
+                    {showQuiz ? 'Hide Quiz' : (quizScore > 0 ? 'Retake Quiz' : 'Take Quiz')}
                 </button>
+
+                {quizScore > 0 && (
+                    <div className={styles.quizResult}>
+                        Score: {quizScore}%
+                    </div>
+                )}
             </div>
 
             {showQuiz && (

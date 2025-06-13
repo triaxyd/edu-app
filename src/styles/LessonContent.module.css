@@ -85,12 +85,15 @@
     margin-top: 40px;
     padding: 12px 24px;
     font-size: 18px;
-    background-color: rgb(255, 202, 0);
-    color: #0d1191;
+    background-color: rgb(147, 218, 111);
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+}
+.readButton:hover {
+    background-color: rgb(113, 199, 68);
 }
 
 .buttonRow {
@@ -160,18 +163,19 @@
 /* Submit and result */
 .quizButton {
     padding: 12px 24px;
-    font-size: 16px;
+    font-size: 18px;
     margin-top: 24px;
-    background-color: #0070f3;
+    background-color: #6165e1;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+
 }
 
 .quizButton:hover {
-    background-color: #005ac1;
+    background-color: #4a4daf;
 }
 
 .resultBox {
@@ -183,4 +187,12 @@
     font-size: 18px;
     color: #59b454;
 }
+.quizResult {
+    margin-left: 12px;
+    font-size: 30px;
+    font-weight: lighter;
+    color: #6165e1;
+    align-self: center;
+}
+
 

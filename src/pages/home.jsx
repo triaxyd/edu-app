@@ -44,7 +44,11 @@ export default function HomePage() {
 
         fetchAllProgress();
     }, [user]);
-
+    const startedModules = Object.values(courseProgress).filter(p => p > 0);
+    const averageProgress =
+        startedModules.length > 0
+            ? Math.round(startedModules.reduce((a, b) => a + b, 0) / startedModules.length)
+            : 0;
     return (
         <>
             <SideBar />
@@ -97,17 +101,12 @@ export default function HomePage() {
 
                     <div className={styles.progressOverview}>
                         <div className={styles.statBlock}>
-                            <div className={styles.statNumber}>{Object.keys(courses).length}</div>
-                            <div className={styles.statLabel}>Modules</div>
+                            <div className={styles.statNumber}>{startedModules.length}</div>
+                            <div className={styles.statLabel}>Courses Started</div>
                         </div>
                         <div className={styles.statBlock}>
                             <div className={styles.statNumber}>
-                                {Object.values(courseProgress).length > 0
-                                    ? `${Math.round(
-                                        Object.values(courseProgress).reduce((a, b) => a + b, 0) /
-                                        Object.values(courseProgress).length
-                                    )}%`
-                                    : '...'}
+                                {startedModules.length > 0 ? `${averageProgress}%` : '0%'}
                             </div>
                             <div className={styles.statLabel}>Average Progress</div>
                         </div>

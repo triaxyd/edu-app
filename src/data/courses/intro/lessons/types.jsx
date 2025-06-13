@@ -12,6 +12,7 @@ export default function DataTypesLesson({courseId, lessonId}) {
     const { user } = useAuth();
     const [showQuiz, setShowQuiz] = useState(false);
     const [isRead, setIsRead] = useState(false);
+    const [quizScore, setQuizScore] = useState(null);
     useEffect(() => {
         if (!user) return;
 
@@ -20,7 +21,11 @@ export default function DataTypesLesson({courseId, lessonId}) {
             const path = `users/${user.uid}/courses/${courseId}/${lessonId}`;
             const snapshot = await get(ref(db, path));
             if (snapshot.exists()) {
-                setIsRead(!!snapshot.val().lesson_read);
+                const data = snapshot.val();
+                setIsRead(!!data.lesson_read);
+                if (typeof data.lesson_score === 'number') {
+                    setQuizScore(data.lesson_score);
+                }
             }
         };
 
@@ -117,9 +122,18 @@ typeof null;        // "object" ← this is a well-known JavaScript quirk!`}
                 </button>
 
 
-                <button className={styles.quizButton} onClick={() => setShowQuiz(!showQuiz)}>
-                    {showQuiz ? 'Hide Quiz' : 'Take Quiz'}
+                <button
+                    className={styles.quizButton}
+                    onClick={() => setShowQuiz(!showQuiz)}
+                >
+                    {showQuiz ? 'Hide Quiz' : (quizScore > 0 ? 'Retake Quiz' : 'Take Quiz')}
                 </button>
+
+                {quizScore > 0 && (
+                    <div className={styles.quizResult}>
+                        Last Score: {quizScore}%
+                    </div>
+                )}
             </div>
 
             {showQuiz && (
