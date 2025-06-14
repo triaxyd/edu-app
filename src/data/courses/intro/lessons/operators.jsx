@@ -14,7 +14,6 @@ export default function OperatorsLesson( {courseId, lessonId}) {
     const [isRead, setIsRead] = useState(false);
     const [quizScore, setQuizScore] = useState(null);
     const [showExtra, setShowExtra] = useState(false);
-    const [difficultyLevel, setDifficultyLevel] = useState(1);
 
     useEffect(() => {
         if (!user) return;
@@ -47,7 +46,7 @@ export default function OperatorsLesson( {courseId, lessonId}) {
 
         setIsRead(newStatus);
     };
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>JavaScript Operators</h1>
@@ -139,6 +138,12 @@ total += 5;  // total is now 15`}
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
 
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
 
                 <button
                     className={styles.quizButton}
@@ -152,12 +157,7 @@ total += 5;  // total is now 15`}
                         Last Score: {quizScore}%
                     </div>
                 )}
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? 'Hide Extra Content' : 'See More'}
-                </button>
+
 
             </div>
 

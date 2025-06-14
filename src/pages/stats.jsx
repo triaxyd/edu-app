@@ -32,30 +32,51 @@ export default function StatsPage() {
 
         const fetchStats = async () => {
             const db = getDatabase();
-            const userCourses = {};
+            const userStats = {};
 
             for (const courseId in courses) {
                 const courseRef = ref(db, `users/${user.uid}/courses/${courseId}`);
                 const snapshot = await get(courseRef);
 
                 if (snapshot.exists()) {
-                    const lessons = courses[courseId].lessons.filter(l => l.id !== 'overview');
-                    const data = snapshot.val();
-                    const totalLessons = lessons.length;
-                    const read = lessons.filter(l => data[l.id]?.lesson_read).length;
-                    const scores = lessons.map(l => data[l.id]?.lesson_score || 0);
-                    const avgScore = scores.reduce((a, b) => a + b, 0) / lessons.length;
+                    const courseData = snapshot.val();
+                    const lessonIds = courses[courseId].lessons
+                        .map(l => l.id)
+                        .filter(id => id !== 'overview');
 
-                    userCourses[courseId] = {
+                    let scoreSum = 0;
+                    let scoreCount = 0;
+                    let readCount = 0;
+
+                    for (const lessonId of lessonIds) {
+                        const lesson = courseData[lessonId];
+                        if (lesson) {
+                            if (lesson.lesson_read) readCount++;
+                            if (typeof lesson.lesson_score === 'number') {
+                                scoreSum += lesson.lesson_score;
+                                scoreCount++;
+                            }
+                        }
+                    }
+
+                    if (typeof courseData.cumulative_score === 'number') {
+                        scoreSum += courseData.cumulative_score;
+                        scoreCount++;
+                    }
+
+                    const avgScore = scoreCount > 0 ? scoreSum / scoreCount : 0;
+                    const readPercent = lessonIds.length > 0 ? Math.round((readCount / lessonIds.length) * 100) : 0;
+
+                    userStats[courseId] = {
                         title: courses[courseId].title,
-                        progress: Math.round((read / totalLessons) * 100),
+                        readPercentage: readPercent,
                         avgScore: Math.round(avgScore),
-                        cumulative: data.cumulative_test_score || null,
+                        cumulative: courseData.cumulative_score ?? null,
                     };
                 }
             }
 
-            setStats(userCourses);
+            setStats(userStats);
             setLoading(false);
         };
 
@@ -64,8 +85,8 @@ export default function StatsPage() {
 
     const chartData = Object.entries(stats).map(([courseId, stat]) => ({
         name: stat.title,
-        'Lesson Completion %': stat.progress,
-        'Avg Quiz Score %': stat.avgScore,
+        'Lesson Completion %': stat.readPercentage,
+        'Avg Score %': stat.avgScore,
     }));
 
     return (
@@ -73,7 +94,7 @@ export default function StatsPage() {
             <Sidebar />
             <div className={styles.page}>
                 <div className={styles.content}>
-                    <h1 className={styles.title}>📈 Your Learning Stats</h1>
+                    <h1 className={styles.title}> Your Learning Stats</h1>
                     <div className={styles.divider}></div>
 
                     {loading ? (
@@ -83,8 +104,8 @@ export default function StatsPage() {
                             {Object.entries(stats).map(([courseId, stat]) => (
                                 <div key={courseId} className={styles.card}>
                                     <div className={styles.courseName}>{stat.title}</div>
-                                    <div className={styles.cardText}>Lesson Completion: <strong>{stat.progress}%</strong></div>
-                                    <div className={styles.cardText}>Average Quiz Score: <strong>{stat.avgScore}%</strong></div>
+                                    <div className={styles.cardText}>Lessons Read: <strong>{stat.readPercentage}%</strong></div>
+                                    <div className={styles.cardText}>Average Test Score: <strong>{stat.avgScore}%</strong></div>
                                     {stat.cumulative !== null && (
                                         <div className={styles.cardText}>Cumulative Test Score: <strong>{stat.cumulative}%</strong></div>
                                     )}
@@ -101,7 +122,7 @@ export default function StatsPage() {
                                         <Tooltip />
                                         <Legend />
                                         <Bar dataKey="Lesson Completion %" fill="#211e56" />
-                                        <Bar dataKey="Avg Quiz Score %" fill="#a79de8" />
+                                        <Bar dataKey="Avg Score %" fill="#a79de8" />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>

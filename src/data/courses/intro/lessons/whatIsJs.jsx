@@ -47,7 +47,7 @@ export default function IntroToJsLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Introduction to JavaScript</h1>
@@ -130,6 +130,12 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
 
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? "Hide Extra Content" : "See More"}
+                </button>
 
                 <button
                     className={styles.quizButton}
@@ -145,12 +151,7 @@ export default function IntroToJsLesson({courseId, lessonId}) {
                     </div>
                 )}
 
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? "Hide Extra Content" : "See More"}
-                </button>
+
 
                 {showExtra && (
                     <IntroToJsExtra difficultyLevel={levelForThisLesson} />

@@ -10,7 +10,7 @@ import {getDatabase, ref, get} from 'firebase/database';
 import {courses} from '@/data/courses';
 
 export default function HomePage() {
-    const { user } = useAuth();
+    const { user, logout} = useAuth();
     const router = useRouter();
     const [courseProgress, setCourseProgress] = useState({});
 
@@ -49,6 +49,15 @@ export default function HomePage() {
         startedModules.length > 0
             ? Math.round(startedModules.reduce((a, b) => a + b, 0) / startedModules.length)
             : 0;
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            router.push('/');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
     return (
         <>
             <SideBar />
@@ -57,9 +66,10 @@ export default function HomePage() {
                     <div className={styles.headerRow}>
                         <h1 className={styles.title}>Hello, {user?.email || 'User'}!</h1>
                         <img
-                            src="/icons/settings.png"
-                            alt="Settings"
-                            className={styles.settingsIcon}
+                            src="/icons/logOut.png"
+                            alt="Log Out"
+                            onClick={handleLogout}
+                            className={styles.logOutIcon}
                         />
                     </div>
                     <div className={styles.divider}></div>

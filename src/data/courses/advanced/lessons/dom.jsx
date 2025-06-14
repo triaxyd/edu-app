@@ -48,7 +48,7 @@ export default function DomLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
 
     return (
         <div className={styles.lessonContainer}>
@@ -140,7 +140,12 @@ button.addEventListener("click", () => {
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
 
-
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
                 <button
                     className={styles.quizButton}
                     onClick={() => setShowQuiz(!showQuiz)}
@@ -153,12 +158,7 @@ button.addEventListener("click", () => {
                         Score: {quizScore}%
                     </div>
                 )}
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? 'Hide Extra Content' : 'See More'}
-                </button>
+
 
             </div>
             {showExtra && <DomExtra difficultyLevel={levelForThisLesson} />}

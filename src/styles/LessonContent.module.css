@@ -171,7 +171,7 @@
 .quizButton {
     padding: 12px 24px;
     font-size: 18px;
-    margin-top: 24px;
+    margin-top: 20px;
     background-color: #6165e1;
     color: white;
     border: none;
@@ -206,7 +206,6 @@
     padding: 12px 24px;
     font-size: 18px;
     margin-top: 20px;
-    margin-bottom:20px;
     background-color: #ffca00;
     color: white;
     border: none;

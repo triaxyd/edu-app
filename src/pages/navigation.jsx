@@ -7,6 +7,9 @@ import { getDatabase, ref, get } from 'firebase/database';
 import SideBar from '@/components/Sidebar/SideBar';
 import styles from '@/styles/Navigation.module.css';
 import { courses } from '@/data/courses';
+import Link from "next/link";
+import { extraResources } from '@/data/lessonResources';
+
 
 export default function NavigationPage() {
     const { user } = useAuth();
@@ -14,6 +17,7 @@ export default function NavigationPage() {
     const [courseStats, setCourseStats] = useState(null);
     const [bestCourse, setBestCourse] = useState(null);
     const [weakestCourse, setWeakestCourse] = useState(null);
+    const [lowestLesson, setLowestLesson] = useState(null);
 
     const projectSuggestions = {
         intro: {
@@ -30,7 +34,6 @@ export default function NavigationPage() {
         },
     };
 
-
     useEffect(() => {
         if (!user) {
             router.push('/');
@@ -40,6 +43,8 @@ export default function NavigationPage() {
         const fetchStats = async () => {
             const db = getDatabase();
             const stats = {};
+            let lowestLessonScore = 101;
+            let weakestLessonInfo = null;
 
             for (const courseId in courses) {
                 const courseRef = ref(db, `users/${user.uid}/courses/${courseId}`);
@@ -47,27 +52,52 @@ export default function NavigationPage() {
 
                 if (snapshot.exists()) {
                     const courseData = snapshot.val();
-                    let totalScore = 0;
-                    let lessonCount = 0;
+                    const lessonIds = courses[courseId].lessons
+                        .map(l => l.id)
+                        .filter(id => id !== 'overview');
 
-                    for (const lessonId in courseData) {
-                        if (lessonId === 'cumulative_test_score') continue;
+                    let scoreSum = 0;
+                    let scoreCount = 0;
+                    let readCount = 0;
+
+                    for (const lessonId of lessonIds) {
                         const lesson = courseData[lessonId];
-                        if (typeof lesson.lesson_score === 'number') {
-                            totalScore += lesson.lesson_score;
-                            lessonCount++;
+
+                        if (lesson) {
+                            if (lesson.lesson_read) readCount++;
+                            if (typeof lesson.lesson_score === 'number') {
+                                scoreSum += lesson.lesson_score;
+                                scoreCount++;
+
+                                // Track the lowest-scoring lesson
+                                if (lesson.lesson_score < lowestLessonScore) {
+                                    lowestLessonScore = lesson.lesson_score;
+                                    weakestLessonInfo = {
+                                        lessonId,
+                                        score: lesson.lesson_score,
+                                        courseId,
+                                    };
+                                }
+                            }
                         }
                     }
 
-                    const avg = lessonCount > 0 ? totalScore / lessonCount : 0;
+                    if (typeof courseData.cumulative_score === 'number') {
+                        scoreSum += courseData.cumulative_score;
+                        scoreCount++;
+                    }
+
+                    const averageScore = scoreCount > 0 ? scoreSum / scoreCount : 0;
+                    const readPercentage = lessonIds.length > 0 ? Math.round((readCount / lessonIds.length) * 100) : 0;
+
                     stats[courseId] = {
-                        averageScore: avg.toFixed(1),
-                        lessonCount,
+                        averageScore: averageScore.toFixed(1),
+                        readPercentage,
                     };
                 }
             }
 
-            // Determine best/worst
+            // Find best and worst courses based on average score
             let best = null;
             let worst = null;
             let highest = -1;
@@ -88,6 +118,7 @@ export default function NavigationPage() {
             setCourseStats(stats);
             setBestCourse(best);
             setWeakestCourse(worst);
+            setLowestLesson(weakestLessonInfo);
         };
 
         fetchStats();
@@ -105,41 +136,74 @@ export default function NavigationPage() {
                         <p className={styles.loadingText}>Loading your course insights...</p>
                     ) : (
                         <>
-                            <h2 className={styles.sectionTitle}>🗂️ Your Course Performance</h2>
-                            <div className={styles.cardList}>
-                                {Object.entries(courseStats).map(([courseId, stat]) => (
-                                    <div key={courseId} className={styles.card}>
-                                        <h3 className={styles.courseName}>{courses[courseId]?.title || courseId}</h3>
-                                        <p className={styles.cardText}>
-                                            Average Score: <strong>{stat.averageScore}%</strong>
-                                        </p>
-                                        <p className={styles.cardText}>
-                                            Lessons Attempted: <strong>{stat.lessonCount}</strong>
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-
                             {bestCourse && (
                                 <>
-                                    <h2 className={styles.sectionTitle}>🏅 You're Best At</h2>
+                                    <h2 className={styles.sectionTitle}>You're Best At</h2>
                                     <p className={styles.paragraph}>
                                         You've scored highest in <strong>{courses[bestCourse]?.title || bestCourse}</strong> with an average of{" "}
                                         <strong>{courseStats[bestCourse].averageScore}%</strong>.
                                     </p>
                                 </>
                             )}
+                            {lowestLesson && (
+                                <>
+                                    <h2 className={styles.sectionTitle}>Area for Improvement</h2>
+                                    <div className={styles.card}>
+                                        <h3 className={styles.courseName}>
+                                            Weakest Lesson in {courses[lowestLesson.courseId]?.title || lowestLesson.courseId}
+                                        </h3>
+                                        <p className={styles.cardText}>
+                                            <strong>
+                                                <Link href={`/course/${lowestLesson.courseId}/lesson/${lowestLesson.lessonId}`} className={styles.resourceLink}>
+                                                    {courses[lowestLesson.courseId]?.lessons.find(l => l.id === lowestLesson.lessonId)?.title || lowestLesson.lessonId}
+                                                </Link>
+                                            </strong>
+                                        </p>
+                                        <p className={styles.cardText}>
+                                            Your score: <strong>{lowestLesson.score}%</strong>
+                                        </p>
+                                        <p className={styles.cardText}>
+                                            Consider revisiting this topic for better mastery before moving on.
+                                        </p>
+                                        {extraResources[lowestLesson.lessonId] && (
+                                            <div className={styles.paragraph}>
+                                                <p className={styles.cardText}>
+                                                    <strong>Here are some extra resources to help you understand this topic better:</strong>
+                                                </p>
+                                                <ul className={styles.resourceList}>
+                                                    {extraResources[lowestLesson.lessonId].map((res, idx) => (
+                                                        <li key={idx}>
+                                                            <a href={res.url} target="_blank" rel="noopener noreferrer" className={styles.resourceLink}>
+                                                                {res.title}
+                                                            </a>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
 
+
+
+
+                                </>
+                            )}
                             {weakestCourse && (
                                 <>
-                                    <h2 className={styles.sectionTitle}>🛠️ Practice Project</h2>
+                                    <h2 className={styles.sectionTitle}>Practice Project</h2>
                                     <div className={styles.card}>
-                                        <h3 className={styles.courseName}>Recommended Project from {courses[weakestCourse]?.title}</h3>
+                                        <h3 className={styles.courseName}>
+                                            Recommended Project for Practicing
+                                            <Link href={`/course/${weakestCourse}`} className={styles.resourceLink}> {courses[weakestCourse]?.title}</Link>
+                                        </h3>
                                         <p className={styles.cardText}><strong>{projectSuggestions[weakestCourse].title}</strong></p>
                                         <p className={styles.cardText}>{projectSuggestions[weakestCourse].description}</p>
                                     </div>
+
                                 </>
                             )}
+
+
                         </>
                     )}
                 </div>

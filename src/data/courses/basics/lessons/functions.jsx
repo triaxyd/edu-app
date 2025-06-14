@@ -5,7 +5,6 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import QuizSection from '@/components/Quiz/QuizSection';
 import { functionsQuiz } from '@/data/courses/basics/quizzes/functionsQuiz';
-import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
 import FunctionsExtra from '@/components/ExtraContent/FunctionsExtra';
 
@@ -49,7 +48,7 @@ export default function FunctionsLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
 
     return (
         <div className={styles.lessonContainer}>
@@ -132,7 +131,12 @@ let result = add(3, 4); // result is 7`}
                 >
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
-
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
 
                 <button
                     className={styles.quizButton}
@@ -147,12 +151,7 @@ let result = add(3, 4); // result is 7`}
                     </div>
                 )}
 
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? 'Hide Extra Content' : 'See More'}
-                </button>
+
 
             </div>
 

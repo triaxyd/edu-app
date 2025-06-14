@@ -49,7 +49,7 @@ export default function DataTypesLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
 
 
     return (
@@ -127,6 +127,12 @@ typeof null;        // "object" ← this is a well-known JavaScript quirk!`}
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
 
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
 
                 <button
                     className={styles.quizButton}
@@ -141,12 +147,7 @@ typeof null;        // "object" ← this is a well-known JavaScript quirk!`}
                     </div>
                 )}
 
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? 'Hide Extra Content' : 'See More'}
-                </button>
+
             </div>
 
             {showExtra && <TypesExtra difficultyLevel={levelForThisLesson} />}

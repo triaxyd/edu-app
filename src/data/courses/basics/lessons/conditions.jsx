@@ -47,7 +47,7 @@ export default function ConditionsLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
 
     return (
         <div className={styles.lessonContainer}>
@@ -149,7 +149,12 @@ console.log(message);`}
                 >
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
-
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
 
                 <button
                     className={styles.quizButton}
@@ -163,12 +168,7 @@ console.log(message);`}
                         Score: {quizScore}%
                     </div>
                 )}
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? 'Hide Extra Content' : 'See More'}
-                </button>
+
 
 
             </div>

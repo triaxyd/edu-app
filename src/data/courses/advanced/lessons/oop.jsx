@@ -5,7 +5,6 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import QuizSection from '@/components/Quiz/QuizSection';
 import { oopQuiz } from '@/data/courses/advanced/quizzes/oopQuiz';
-import { markLessonAsRead } from '@/lib/dbUtils';
 import { useAuth } from '@/context/authContext';
 import OopExtra from '@/components/ExtraContent/OopExtra';
 
@@ -49,7 +48,7 @@ export default function OOPLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
 
     return (
         <div className={styles.lessonContainer}>
@@ -151,6 +150,12 @@ counter.increment(); // Output: 1
                 >
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
 
 
                 <button
@@ -166,12 +171,6 @@ counter.increment(); // Output: 1
                     </div>
                 )}
 
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? 'Hide Extra Content' : 'See More'}
-                </button>
 
             </div>
             {showExtra && <OopExtra difficultyLevel={levelForThisLesson} />}

@@ -49,7 +49,7 @@ export default function VariablesLesson({ courseId, lessonId }) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Variables and Constants</h1>
@@ -125,6 +125,13 @@ user.name = "Bob"; // This is allowed`}
                 </button>
 
                 <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? "Hide Extra Content" : "See More"}
+                </button>
+
+                <button
                     className={styles.quizButton}
                     onClick={() => setShowQuiz(!showQuiz)}
                 >
@@ -136,12 +143,7 @@ user.name = "Bob"; // This is allowed`}
                         Last Score: {quizScore}%
                     </div>
                 )}
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? "Hide Extra Content" : "See More"}
-                </button>
+
 
                 {showExtra && <VariablesExtra difficultyLevel={levelForThisLesson} />}
             </div>

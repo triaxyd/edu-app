@@ -48,7 +48,7 @@ export default function LoopsLesson({courseId, lessonId}) {
         setIsRead(newStatus);
     };
 
-    const levelForThisLesson = quizScore > 67 ? 2 : 1;   //  deep-dive if ≥ 67 %
+    const levelForThisLesson = quizScore > 67 ? 2 : 1;
     return (
         <div className={styles.lessonContainer}>
             <h1 className={styles.heading}>Loops in JavaScript</h1>
@@ -137,6 +137,12 @@ for (let fruit of fruits) {
                 >
                     {isRead ? "Mark as Unread" : "Mark Lesson as Read"}
                 </button>
+                <button
+                    className={styles.moreButton}
+                    onClick={() => setShowExtra(!showExtra)}
+                >
+                    {showExtra ? 'Hide Extra Content' : 'See More'}
+                </button>
 
                 <button
                     className={styles.quizButton}
@@ -150,12 +156,7 @@ for (let fruit of fruits) {
                         Score: {quizScore}%
                     </div>
                 )}
-                <button
-                    className={styles.moreButton}
-                    onClick={() => setShowExtra(!showExtra)}
-                >
-                    {showExtra ? 'Hide Extra Content' : 'See More'}
-                </button>
+
 
             </div>
             {showExtra && <LoopsExtra difficultyLevel={levelForThisLesson} />}

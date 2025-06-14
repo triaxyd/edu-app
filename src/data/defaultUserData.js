@@ -1,11 +1,4 @@
-// src/utils/defaultUserData.js
 export const defaultUserData = {
-    difficulty_level: 1,
-    badges: [],
-    stats: {
-        average_score: 0,
-        quizzes_taken: 0,
-    },
     courses: {
         intro: {
             variables: { lesson_score: 0, lesson_read: false },

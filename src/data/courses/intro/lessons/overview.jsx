@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from '@/styles/LessonContent.module.css';
 import { useAuth } from '@/context/authContext';
-import { saveLessonProgress, markLessonAsRead } from '@/lib/dbUtils';
 import { introOverviewQuiz } from '@/data/courses/intro/quizzes/overviewQuiz';
 import { saveCumulativeScore } from '@/lib/dbUtils';
 import {get, getDatabase, ref} from "firebase/database";
