@@ -147,10 +147,10 @@ export default function NavigationPage() {
                             )}
                             {lowestLesson && (
                                 <>
-                                    <h2 className={styles.sectionTitle}>Area for Improvement</h2>
+                                    <h2 className={styles.sectionTitle}>You Could Take a Look At </h2>
                                     <div className={styles.card}>
                                         <h3 className={styles.courseName}>
-                                            Weakest Lesson in {courses[lowestLesson.courseId]?.title || lowestLesson.courseId}
+                                            Suggested Lesson in {courses[lowestLesson.courseId]?.title || lowestLesson.courseId}
                                         </h3>
                                         <p className={styles.cardText}>
                                             <strong>
@@ -163,7 +163,7 @@ export default function NavigationPage() {
                                             Your score: <strong>{lowestLesson.score}%</strong>
                                         </p>
                                         <p className={styles.cardText}>
-                                            Consider revisiting this topic for better mastery before moving on.
+                                            Consider visiting this topic for better mastery before moving on.
                                         </p>
                                         {extraResources[lowestLesson.lessonId] && (
                                             <div className={styles.paragraph}>
