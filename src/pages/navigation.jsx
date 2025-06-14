@@ -129,7 +129,7 @@ export default function NavigationPage() {
             <SideBar />
             <div className={styles.page}>
                 <div className={styles.content}>
-                    <h1 className={styles.title}>Navigation & Recommendations</h1>
+                    <h1 className={styles.title}>Learning Suggestions</h1>
                     <div className={styles.divider}></div>
 
                     {!courseStats ? (

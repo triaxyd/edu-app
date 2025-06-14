@@ -7,7 +7,7 @@ export default function LoopsExtra({ difficultyLevel }) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}> Loops Made Simple</h2>
+                    <h2 className={styles.subheading}>Loops Made Simple</h2>
                     <p className={styles.paragraph}>
                         If loops feel confusing, here's how to break them down:
                     </p>
@@ -23,7 +23,7 @@ export default function LoopsExtra({ difficultyLevel }) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}> Going Deeper with Loops</h2>
+                    <h2 className={styles.subheading}>Going Deeper with Loops</h2>
                     <p className={styles.paragraph}>
                         You're ready to start thinking about how loops interact with data and performance:
                     </p>

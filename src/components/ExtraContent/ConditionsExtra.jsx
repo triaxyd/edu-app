@@ -7,7 +7,7 @@ export default function ConditionsExtra({ difficultyLevel }) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}> Extra Help: Breaking Down Conditionals</h2>
+                    <h2 className={styles.subheading}>Extra Help: Breaking Down Conditionals</h2>
                     <p className={styles.paragraph}>
                         Struggling with how conditionals work? You're not alone — here’s how to think about them more clearly:
                     </p>
@@ -23,7 +23,7 @@ export default function ConditionsExtra({ difficultyLevel }) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}> Deep Dive: Smarter Use of Conditionals</h2>
+                    <h2 className={styles.subheading}>Deep Dive: Smarter Use of Conditionals</h2>
                     <p className={styles.paragraph}>
                         Ready for more powerful logic? Here's how conditionals scale in real-world JS:
                     </p>

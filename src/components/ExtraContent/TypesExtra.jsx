@@ -7,7 +7,7 @@ export default function TypesExtra({ difficultyLevel }) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}> Extra Support: Understanding Data Types Better</h2>
+                    <h2 className={styles.subheading}>Extra Support: Understanding Data Types Better</h2>
                     <p className={styles.paragraph}>
                         Struggling to tell the difference between data types? No worries — this can take a little time to click.
                         Here's another way to understand them:
@@ -25,7 +25,7 @@ export default function TypesExtra({ difficultyLevel }) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}> Deep Dive: Type Nuances in JavaScript</h2>
+                    <h2 className={styles.subheading}>Deep Dive: Type Nuances in JavaScript</h2>
                     <p className={styles.paragraph}>
                         Now that you're comfortable with the basics, let's level up your understanding of data types.
                     </p>

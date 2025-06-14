@@ -6,7 +6,7 @@ export default function AsyncExtra({ difficultyLevel }) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}> Understanding Asynchronous Behavior</h2>
+                    <h2 className={styles.subheading}>Understanding Asynchronous Behavior</h2>
                     <p className={styles.paragraph}>
                         If you’re still getting comfortable with async code, try to focus on these mental models:
                     </p>
@@ -19,7 +19,7 @@ export default function AsyncExtra({ difficultyLevel }) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}>⚙ Mastering Async Control Flow</h2>
+                    <h2 className={styles.subheading}>Mastering Async Control Flow</h2>
                     <p className={styles.paragraph}>
                         You’re ready to go deeper — here are some powerful ideas to keep in mind:
                     </p>

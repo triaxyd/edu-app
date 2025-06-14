@@ -6,7 +6,7 @@ export default function OopExtra({ difficultyLevel }) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}> Beginner OOP Tips</h2>
+                    <h2 className={styles.subheading}>Beginner OOP Tips</h2>
                     <p className={styles.paragraph}>
                         Object-Oriented Programming might seem intimidating at first — here are some simple ways to get started:
                     </p>
@@ -19,7 +19,7 @@ export default function OopExtra({ difficultyLevel }) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}> Deepen Your OOP Mastery</h2>
+                    <h2 className={styles.subheading}>Deepen Your OOP Mastery</h2>
                     <p className={styles.paragraph}>
                         Already comfortable with classes? Level up your OOP with these advanced insights:
                     </p>

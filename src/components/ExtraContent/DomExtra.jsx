@@ -6,7 +6,7 @@ export default function DomExtra({ difficultyLevel }) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}> Beginner DOM Tips</h2>
+                    <h2 className={styles.subheading}>Beginner DOM Tips</h2>
                     <p className={styles.paragraph}>
                         DOM manipulation can feel new and magical at first — here’s how to grow your confidence:
                     </p>
@@ -19,7 +19,7 @@ export default function DomExtra({ difficultyLevel }) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}> Going Deeper with the DOM</h2>
+                    <h2 className={styles.subheading}>Going Deeper with the DOM</h2>
                     <p className={styles.paragraph}>
                         You’ve got the basics — now refine your DOM skills with more advanced ideas:
                     </p>

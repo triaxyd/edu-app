@@ -6,7 +6,7 @@ export default function FunctionsExtra({difficultyLevel}) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}>🛠 Extra Help: Understanding Functions</h2>
+                    <h2 className={styles.subheading}>Extra Help: Understanding Functions</h2>
                     <p className={styles.paragraph}>
                         Still wrapping your head around functions? Let’s break it down:
                     </p>
@@ -31,7 +31,7 @@ export default function FunctionsExtra({difficultyLevel}) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}> Deep Dive: Power of Functions in JavaScript</h2>
+                    <h2 className={styles.subheading}>Deep Dive: Power of Functions in JavaScript</h2>
                     <p className={styles.paragraph}>
                         Now that you’ve got the basics, let’s explore deeper:
                     </p>

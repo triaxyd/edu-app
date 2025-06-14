@@ -6,7 +6,7 @@ export default function OperatorsExtra({ difficultyLevel }) {
         <div className={styles.questionBlock}>
             {difficultyLevel === 1 ? (
                 <>
-                    <h2 className={styles.subheading}> Extra Help: Making Sense of Operators</h2>
+                    <h2 className={styles.subheading}>Extra Help: Making Sense of Operators</h2>
                     <p className={styles.paragraph}>
                         Still getting comfortable with operators? That’s okay — think of them as symbols that do work in your code.
                     </p>
@@ -23,7 +23,7 @@ export default function OperatorsExtra({ difficultyLevel }) {
                 </>
             ) : (
                 <>
-                    <h2 className={styles.subheading}> Deep Dive: Understanding Operator Behavior</h2>
+                    <h2 className={styles.subheading}>Deep Dive: Understanding Operator Behavior</h2>
                     <p className={styles.paragraph}>
                         You’re progressing well — let’s explore how JavaScript evaluates expressions more deeply:
                     </p>
