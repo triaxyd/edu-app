@@ -7,7 +7,6 @@ import AuthCard from '@/components/AuthCard';
 import SignUpLogo from '@/components/Header/SignUpLogo';
 import TextInput from '@/components/Input/TextInput';
 import SignInButton from '@/components/Button/SignInButton';
-import LinkText from '@/components/Text/LinkText';
 import Link from "next/link";
 
 export default function RegisterPage() {
